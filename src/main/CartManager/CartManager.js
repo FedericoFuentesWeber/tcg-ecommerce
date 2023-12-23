@@ -1,8 +1,8 @@
-import { Cart } from "../Cart/Cart";
+import { Cart } from "../Cart/Cart.js";
 import { promises as fs } from "node:fs";
 
 export class CartManager {
-    construct(filePath) {
+    constructor(filePath) {
         this.path = filePath;
         this.counter = 0;
     }
@@ -107,7 +107,7 @@ export class CartManager {
 
             let cartToUpdate = carts.find((cart) => cart.id === cartId);
 
-            if(await productAlreadyInCart(productId, cartId)) {
+            if(await this.productAlreadyInCart(productId, cartId)) {
                 const productToUpdate = products.find((product) => product.id === productId);
 
                 const productIndex = products.indexOf(productToUpdate);

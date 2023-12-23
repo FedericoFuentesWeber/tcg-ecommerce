@@ -16,10 +16,11 @@ export class ProductManager {
     createNewProduct = async ({
         title,
         description,
-        price,
-        thumbnail,
         code,
+        price,
         stock,
+        category,
+        thumbnails
     }) => {
         const id = await this.generateSequentialID();
     
@@ -27,10 +28,12 @@ export class ProductManager {
                 id,
                 title,
                 description,
-                price,
-                thumbnail,
                 code,
-                stock
+                price,
+                status: true,
+                stock,
+                category,
+                thumbnails
             })
         
     }
@@ -47,7 +50,14 @@ export class ProductManager {
 
     addProduct = async(product) => {
         try {
-            if(!product.title || !product.description || !product.price || !product.thumbnail || !product.code || !product.stock) {
+            if(
+                !product.title || 
+                !product.description || 
+                !product.code || 
+                !product.price ||
+                !product.stock ||
+                !product.category
+            ) {
                 throw new Error("Hay parámetros sin completar.")
             }
 

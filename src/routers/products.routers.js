@@ -6,7 +6,7 @@ const filePath = "./resources/Products.json";
 
 const productManager = new ProductManager(filePath);
 
-router.get('/', async(req, res) => {
+router.get("/", async(req, res) => {
     try {
         const products = await productManager.getProducts();
         const { limit } = req.query;
@@ -23,7 +23,7 @@ router.get('/', async(req, res) => {
     }
 });
 
-router.get('/:pid', async(req, res) => {
+router.get("/:pid", async(req, res) => {
     try {
         const { pid } = req.params;
         const productId = parseInt(pid, 10);
@@ -36,7 +36,7 @@ router.get('/:pid', async(req, res) => {
     }
 });
 
-router.put('/:pid', async(req, res) => {
+router.put("/:pid", async(req, res) => {
     try {
         const { pid } = req.params;
         const updatedProduct = req.body;
@@ -51,7 +51,7 @@ router.put('/:pid', async(req, res) => {
     }
 });
 
-router.delete('/:pid', async(req, res) => {
+router.delete("/:pid", async(req, res) => {
     try {
         const { pid } = req.params;
         await productManager.deleteProduct(parseInt(pid, 10));
@@ -64,3 +64,19 @@ router.delete('/:pid', async(req, res) => {
         return res.status(400).send({ status: "failed", description: error.message });
     }
 });
+
+router.post("/", async(req, res) => {
+    try {
+        const newProduct = req.body;
+        await productManager.addProduct(newProduct);
+
+        return res.status(201).send({ 
+            status: "success", 
+            newProduct
+        })
+    } catch(error) {
+        return res.status(400).send({ status: "failed", description: error.message });
+    }
+});
+
+export default router;
