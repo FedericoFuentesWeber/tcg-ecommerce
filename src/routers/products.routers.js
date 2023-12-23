@@ -4,7 +4,6 @@ import { ProductManager } from "../main/ProductManager/ProductManager.js";
 const router = Router();
 const filePath = "./resources/Products.json";
 
-
 const productManager = new ProductManager(filePath);
 
 router.get('/', async(req, res) => {
