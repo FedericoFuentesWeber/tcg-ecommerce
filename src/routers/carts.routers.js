@@ -8,7 +8,9 @@ const cartManager = new CartManager(filePath);
 
 router.post("/", async (req, res) => {
     try {
-        await cartManager.addCart();
+        const products = req.body;
+
+        await cartManager.addCart(products);
 
         return res.status(201).send({ 
             status: "success", 
