@@ -28,9 +28,14 @@ export class CartManager {
         }
     };
 
-    addCart = async() => {
+    addCart = async(products) => {
         try {
-            const newCart = await this.createNewCart([]);
+
+            if (!products || products.length === 0) {
+                throw new Error("No hay ningún producto en el carrito.");
+            }
+
+            const newCart = await this.createNewCart(products);
             const carts = await this.getCarts();
 
             carts.push(newCart);
