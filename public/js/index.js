@@ -23,6 +23,10 @@ const addNewProduct = () => {
                 <label for="description" class="form-label">Descripción</label>
                 <input type="text" class="form-control" id="description" name="description" placeholder="Descripción"/>
             </div>
+            <div class="col-md-6">
+                <label for="category" class="form-label">Categoria</label>
+                <input type="text" class="form-control" id="category" name="category" placeholder="Categoria"/>
+            </div>
             <div class="col-6">
                 <label for="price" class="form-label">Precio</label>
                 <input type="text" class="form-control" id="price" name="price" placeholder="Precio"/>
@@ -36,8 +40,8 @@ const addNewProduct = () => {
                 <input type="text" class="form-control" id="code" name="code" placeholder="Código"/>
             </div>
             <div class="col-md-6">
-            <label for="thumbnail" class="form-label">Imagen</label>
-                <input type="file" class="form-control" id="thumbnail" name="thumbnail" placeholder="Seleccione la imagen" multiple="multiple" accept="image/*"/>
+            <label for="thumbnails" class="form-label">Imagen</label>
+                <input type="file" class="form-control" id="thumbnails" name="thumbnails" placeholder="Seleccione la imagen" multiple="multiple" accept="image/*"/>
             </div>
         </form>`,
         showCancelButton: true,
@@ -45,19 +49,22 @@ const addNewProduct = () => {
         confirmButtonText: "Agregar",
         preConfirm: async () => {
             const formData = new FormData(document.getElementById("productForm"));
-
             try {
-                fetch("/", { method: "POST", body: formData })
-                    .then((response) => {
-                        if(response.ok) {
-                            return response.json();
-                        }
-                        throw new Error("Error al agregar el producto.");
-                    })
-                    .then((data) => {
-                        socket.emit("addProductEvent", data);
-                    });
+                const response = await fetch("/api/products/", {
+                    method: "POST",
+                    body: formData
+                });
+                if(!response.ok) {
+                    throw new Error("Error al agregar el producto."); 
+                }
+                Swal.fire({
+                    title: "El producto fue agregado correctamente.",
+                    icon: "success"
+                })
             } catch(error) {
+                Swal.showValidationMessage(
+                    `<i class="fa fa-info-circle"></i> ${error}`
+                );
                 console.log(error);
             }
         }
@@ -71,15 +78,25 @@ const deleteProduct = (productId) => {
         showCancelButton: true,
         confirmButtonText: "Eliminar",
         cancelButtonText: "Cancelar",
-    })
-    .then((result) => {
-        if(result.isConfirmed) {
-            socket.emit("deleteProductEvent", productId);
-            updateTable();
+        preConfirm: async () => {
+            try {
+                const response = await fetch(`/api/products/${productId}`, {
+                    method: "DELETE"
+                });
+                if(!response.ok) {
+                    throw new Error("Error al eliminar el producto");
+                }
+                Swal.fire({
+                    title: "El producto fue eliminado correctamente",
+                    icon: "success"
+                })
+            } catch(error) {
+                Swal.showValidationMessage(
+                    `<i class="fa fa-info-circle"></i> ${error}`
+                );
+                console.log(error);
+            }
         }
-    })
-    .catch((error) => {
-        console.log(error.message)
     });
 };
 
@@ -96,10 +113,11 @@ const updateTable = async (products) => {
                     <td>${product.title}</td>
                     <td>${product.description}</td>
                     <td>${product.code}</td>
+                    <td>${product.category}</td>
                     <td>${product.price}</td>
                     <td>${product.stock}</td>
                     <td class="px-4">
-                        <a onclick="showImage('${product.thumbnail}')" class="btn-sm clickable">
+                        <a onclick="showImage('${product.thumbnails}')" class="btn-sm clickable">
                             Imagen
                         </a>
                     </td>

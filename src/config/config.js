@@ -1,7 +1,7 @@
 import { connect } from "mongoose";
 
-DB_URL = 
-    'mongodb+srv://ffuentesweber:Ma3n9KcZFtY07D5p@cluster0.ngmdz96.mongodb.net/tcg?retryWrites=true&w=majority'
+const DB_URL = 
+    'mongodb+srv://ffuentesweber:<password>@cluster0.ngmdz96.mongodb.net/tcg?retryWrites=true&w=majority';
 
 const connectDB = async() => {
     try {
@@ -10,4 +10,6 @@ const connectDB = async() => {
     } catch(error) {
         console.log(error);
     }
-}
+};
+
+export { connectDB };

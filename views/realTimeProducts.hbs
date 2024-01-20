@@ -13,6 +13,7 @@
                     <th scope="col">Título</th>
                     <th scope="col">Descripción</th>
                     <th scope="col">Código</th>
+                    <th scope="col">Categoria</th>
                     <th scope="col">Precio</th>
                     <th scope="col">Stock</th>
                     <th scope="col">Imagen</th>
@@ -25,10 +26,11 @@
                         <td>{{this.title}}</td>
                         <td>{{this.description}}</td>
                         <td>{{this.code}}</td>
+                        <td>{{this.category}}</td>
                         <td>{{this.price}}</td>
                         <td>{{this.stock}}</td>
                         <td class="px-4">
-                            <a onclick="showImage('{{this.thumbnail}}')" class="btn-sm clickable">
+                            <a onclick="showImage('{{this.thumbnails}}')" class="btn-sm clickable">
                                 Imagen
                             </a>
                         </td>
