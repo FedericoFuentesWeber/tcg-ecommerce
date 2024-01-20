@@ -1,0 +1,28 @@
+<div class="container mt-5">
+  <!-- Message display section -->
+  <div id="messagesDisplay" class="chat-discussion">
+    {{#each messages}}
+      <div class="chat-message left">
+        <div class="message">
+          <small class="message-sender">
+            {{this.userEmail}}
+          </small>
+          <span class="message-content">
+            {{this.message}}
+          </span>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+
+  <!-- Message input section -->
+  <div class="mb-3">
+    <label for="messageBox" class="form-label">Escriba su mensaje:</label>
+    <textarea class="form-control" id="messageBox" rows="4"></textarea>
+  </div>
+
+  <button type="button" class="btn btn-primary" onclick="addNewMessage()">
+    Enviar mensaje
+  </button>
+</div>
+<script src="js/chat.js"></script>
