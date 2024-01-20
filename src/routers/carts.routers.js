@@ -1,10 +1,9 @@
 import { Router } from "express";
-import { CartManager } from "../main/CartManager/CartManager.js";
+import { CartManagerDB } from "../daos/DBManagers/CartManager/CartManagerDB.js";
 
 const router = Router();
-const filePath = "./resources/Carts.json";
 
-const cartManager = new CartManager(filePath);
+const cartManager = new CartManagerDB();
 
 router.post("/", async (req, res) => {
     try {
@@ -24,7 +23,7 @@ router.post("/", async (req, res) => {
 router.get("/:cid", async(req, res) => {
     try {
         const { cid } = req.params;
-        const cart = await cartManager.getCartById(parseInt(cid, 10));
+        const cart = await cartManager.getCartById(cid);
 
         return res.status(200).send({ status: "success", description: cart.products});
 
@@ -36,7 +35,7 @@ router.get("/:cid", async(req, res) => {
 router.post("/:cid/product/:pid", async(req, res) => {
     try {
         const { cid, pid } = req.params;
-        await cartManager.addProduct(parseInt(cid, 10), parseInt(pid, 10));
+        await cartManager.addProduct(cid, pid);
 
         return res.status(201).send({ 
             status: "success", 

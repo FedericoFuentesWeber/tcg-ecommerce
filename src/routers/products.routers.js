@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { ProductManager } from "../main/ProductManager/ProductManager.js";
+import { ProductManagerDB } from "../daos/DBManagers/ProductManager/ProductManagerDB.js";
+import { io } from "../app.js";
+import { uploader } from "../../utils.js";
 
 const router = Router();
-const filePath = "./resources/Products.json";
 
-const productManager = new ProductManager(filePath);
+const productManager = new ProductManagerDB();
 
 router.get("/", async(req, res) => {
     try {
@@ -26,8 +27,7 @@ router.get("/", async(req, res) => {
 router.get("/:pid", async(req, res) => {
     try {
         const { pid } = req.params;
-        const productId = parseInt(pid, 10);
-        const foundProduct = await productManager.getProductById(productId);
+        const foundProduct = await productManager.getProductById(pid);
 
         return res.status(200).send(foundProduct);
 
@@ -40,7 +40,7 @@ router.put("/:pid", async(req, res) => {
     try {
         const { pid } = req.params;
         const updatedProduct = req.body;
-        await productManager.updateProduct(parseInt(pid, 10), updatedProduct);
+        await productManager.updateProduct(pid, updatedProduct);
 
         return res.status(200).send({ 
             status: "success", 
@@ -54,7 +54,11 @@ router.put("/:pid", async(req, res) => {
 router.delete("/:pid", async(req, res) => {
     try {
         const { pid } = req.params;
-        await productManager.deleteProduct(parseInt(pid, 10));
+        await productManager.deleteProduct(pid);
+
+        const updatedProducts = await productManager.getProducts();
+
+        io.emit("updateProductsEvent", updatedProducts);
 
         return res.status(200).send({ 
             status: "success", 
@@ -65,10 +69,30 @@ router.delete("/:pid", async(req, res) => {
     }
 });
 
-router.post("/", async(req, res) => {
+router.post("/", uploader.array("thumbnails"), async(req, res) => {
     try {
         const newProduct = req.body;
+        
+        if(req.files && req.files.length >0) {
+            const images = req.files.map((file) => {
+                const fullPath = file.path;
+                const imagesIndex = fullPath.indexOf("images");
+                if(imagesIndex !== -1) {
+                    const relativePath = fullPath.substring(imagesIndex -1);
+                    return relativePath;
+                } else {
+                    console.log("Images directory not found");
+                    return null;
+                }
+            });
+
+            newProduct.thumbnails = images.filter((image) => image !== null);
+        }
+
         await productManager.addProduct(newProduct);
+        const updatedProducts = await productManager.getProducts();
+
+        io.emit("updateProductsEvent", updatedProducts);
 
         return res.status(201).send({ 
             status: "success", 

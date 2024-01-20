@@ -1,0 +1,51 @@
+<main>
+    <div class="d-flex justify-content-center p-3">
+        <h1>Productos</h1>
+        <a class="btn btn-md" onclick="addNewProduct()">
+            Agregar producto
+        </a>
+    </div>
+
+    <section>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Título</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Código</th>
+                    <th scope="col">Categoria</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Stock</th>
+                    <th scope="col">Imagen</th>
+                    <th scope="col">Acción</th>
+                </tr>
+            </thead>
+            <tbody id="products_body">
+                {{#each products}}
+                    <tr>
+                        <td>{{this.title}}</td>
+                        <td>{{this.description}}</td>
+                        <td>{{this.code}}</td>
+                        <td>{{this.category}}</td>
+                        <td>{{this.price}}</td>
+                        <td>{{this.stock}}</td>
+                        <td class="px-4">
+                            <a onclick="showImage('{{this.thumbnails}}')" class="btn-sm clickable">
+                                Imagen
+                            </a>
+                        </td>
+                        <td class="px-4">
+                            <a onclick="deleteProduct('{{this.id}}')" class="btn-sm clickable">
+                                Borrar
+                            </a>
+                        </td>
+                    </tr>
+                {{else}}
+                    <tr>
+                        <td colspan="7">No hay productos</td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </section>
+</main>
