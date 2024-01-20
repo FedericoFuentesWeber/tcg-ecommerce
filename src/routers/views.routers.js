@@ -14,7 +14,10 @@ router.get("/", async(req, res) => {
             products: products
         });
     } catch(error) {
-        return res.status(400).send({ status: "failed", description: error.message });
+        return res.status(400).render("index", {
+            title: "Productos",
+            errorMessage: error.message
+        });
     }
 });
 

@@ -49,12 +49,6 @@ export class ProductManagerDB {
                 !product.price ||
                 !product.stock 
             ) {
-                console.log("product", product.title);
-                console.log("product", product.description);
-                console.log("product", product.code);
-                console.log("product", product.category);
-                console.log("product", product.price);
-                console.log("product", product.stock);
                 throw new Error("Hay parámetros sin completar.")
             }
 
