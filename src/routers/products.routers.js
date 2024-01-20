@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { ProductManager } from "../main/ProductManager/ProductManager.js";
+import { ProductManager } from "../daos/FileBasedManagers/ProductManager/ProductManager.js";
 
 const router = Router();
 const filePath = "./resources/Products.json";
