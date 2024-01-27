@@ -1,8 +1,8 @@
 <main>
     <div class="d-flex justify-content-center p-3">
-        <h1>Productos</h1>
-        <a class="btn btn-md" onclick="addNewProduct()">
-            Agregar producto
+        <h1>Carrito</h1>
+        <a class="btn btn-md" onclick="deleteAllProductsFrom('{{cartId}}')">
+            Vaciar carrito
         </a>
     </div>
 
@@ -11,31 +11,25 @@
             <thead>
                 <tr>
                     <th scope="col">Título</th>
-                    <th scope="col">Descripción</th>
-                    <th scope="col">Código</th>
-                    <th scope="col">Categoria</th>
+                    <th scope="col">Cantidad</th>
                     <th scope="col">Precio</th>
-                    <th scope="col">Stock</th>
                     <th scope="col">Imagen</th>
                     <th scope="col">Acción</th>
                 </tr>
             </thead>
-            <tbody id="products_body">
+            <tbody id="cart_body">
                 {{#each products}}
                     <tr>
-                        <td>{{this.title}}</td>
-                        <td>{{this.description}}</td>
-                        <td>{{this.code}}</td>
-                        <td>{{this.category}}</td>
-                        <td>{{this.price}}</td>
-                        <td>{{this.stock}}</td>
+                        <td>{{this.product.title}}</td>
+                        <td>{{this.quantity}}</td>
+                        <td>${{this.product.price}}</td>
                         <td class="px-4">
-                            <a onclick="showImage('{{this.thumbnails}}')" class="btn-sm clickable">
+                            <a onclick="showImage('{{this.product.thumbnails}}')" class="btn-sm clickable">
                                 Imagen
                             </a>
                         </td>
                         <td class="px-4">
-                            <a onclick="deleteProduct('{{this.id}}')" class="btn-sm clickable">
+                            <a onclick="deleteProductFrom('{{this.product._id}}', '{{../cartId}}')" class="btn-sm clickable">
                                 Borrar
                             </a>
                         </td>
@@ -49,4 +43,5 @@
         </table>
     </section>
 </main>
-<script src="js/realTimeProducts.js"></script>
+
+<script src="/js/cart.js"></script>

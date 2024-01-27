@@ -26,7 +26,7 @@ export class CartManagerDB {
             }
 
             const newCart = await this.createNewCart(products);
-            cartModel.create(newCart);
+            return cartModel.create(newCart);
         } catch(error) {
             throw error;
         }
@@ -54,7 +54,7 @@ export class CartManagerDB {
                 )
             }
 
-            const cart = await cartModel.findOne({ _id: cartId });
+            const cart = await cartModel.findOne({ _id: cartId }).lean();
 
             if(!cart) {
                 throw new Error(`El carrito con el id ${cartId} no se encuentra en la lista.`)
@@ -96,7 +96,6 @@ export class CartManagerDB {
             );
 
             if(product && product.products.length >0) {
-                console.log("product", product.products[0]);
                 return product.products[0];
             } else {
                 throw new Error(
@@ -128,7 +127,6 @@ export class CartManagerDB {
 
             if(await this.productAlreadyInCart(productId, cartId)) {
                 const { quantity } = await this.findProductIn(productId, cartId);
-                console.log("quantity", quantity);
                 await this.updateProductQuantity(cartId, productId, quantity+1);
             } else{
                 await cartModel.updateOne(

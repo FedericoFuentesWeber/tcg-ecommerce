@@ -125,9 +125,9 @@ export class ProductManagerDB {
         }
     };
 
-    filteredProductsBy = async(queryParams) => {
+    filteredProductsBy = async(querySearch, queryParams) => {
         try {
-            const filteredProducts = await productModel.paginate({}, queryParams);
+            const filteredProducts = await productModel.paginate(querySearch, queryParams);
             return filteredProducts;
         } catch(error) {
             console.error(error.message);
