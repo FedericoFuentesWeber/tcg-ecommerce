@@ -1,6 +1,9 @@
 import { Cart } from "../../../main/Cart/Cart.js";
 import { mongoose } from "mongoose";
 import cartModel from "../../../models/cart.model.js"
+import { ProductManagerDB } from "../ProductManager/ProductManagerDB.js"
+
+const productManager = new ProductManagerDB();
 
 export class CartManagerDB {
 
@@ -31,7 +34,7 @@ export class CartManagerDB {
 
     getCarts = async() => {
         try {
-            const carts = await cartModel.find({});
+            return await cartModel.find({});
         } catch(error) {
             console.error(error.message);
         }
@@ -51,7 +54,7 @@ export class CartManagerDB {
                 )
             }
 
-            const cart = await cartModel.findById(cartId);
+            const cart = await cartModel.findOne({ _id: cartId });
 
             if(!cart) {
                 throw new Error(`El carrito con el id ${cartId} no se encuentra en la lista.`)
@@ -75,8 +78,31 @@ export class CartManagerDB {
 
     productAlreadyInCart = async(productId, cartId) => {
         try {
-            const products = await this.getProducts(cartId);
-            return products.some((product) => product.id === productId);
+            const cart = await cartModel.findOne({
+                _id: cartId,
+                "products.product": productId
+            });
+            return !!cart;
+        } catch(error) {
+            throw error;
+        }
+    }
+
+    findProductIn = async(productId, cartId) => {
+        try {
+            const product = await cartModel.findOne(
+                { _id: cartId, "products.product": productId },
+                { "products.$": 1 }
+            );
+
+            if(product && product.products.length >0) {
+                console.log("product", product.products[0]);
+                return product.products[0];
+            } else {
+                throw new Error(
+                    `El producto con ID ${productId} no se encuentra en el carrito con ID ${cartId}`
+                );
+            }
         } catch(error) {
             throw error;
         }
@@ -84,30 +110,167 @@ export class CartManagerDB {
 
     addProduct = async(cartId, productId) => {
         try {
-            if(!productId) {
-                throw new Error("Hay parámetros sin completar.")
+            if(!mongoose.Types.ObjectId.isValid(cartId)) {
+                throw new Error(
+                    `El ID ${cartId} no es valido.`
+                )
             }
-            const cart = await this.getCartById(cartId);
-            let products = cart.products;
+            const cart = await cartModel.findById(cartId);
+            if(!cart) {
+                throw new Error(`El carrito con el id ${cartId} no se encuentra en la lista.`)
+            }
+
+            try {
+                await productManager.getProductById(productId);
+            } catch(error) {
+                throw error;
+            }
 
             if(await this.productAlreadyInCart(productId, cartId)) {
-                const productToUpdate = products.find((product) => product.id === productId);
-
-                const productIndex = products.indexOf(productToUpdate);
-                productToUpdate.quantity++;
-
-                if(productIndex !== -1) {
-                    products[productIndex] = productToUpdate;
-                }
+                const { quantity } = await this.findProductIn(productId, cartId);
+                console.log("quantity", quantity);
+                await this.updateProductQuantity(cartId, productId, quantity+1);
             } else{
-                products.push({ id: productId, quantity: 1 });
+                await cartModel.updateOne(
+                    { _id: cartId },
+                    { $push: { products: { product: productId, quantity: 1 } } }
+                );
+            }
+        } catch(error) {
+            throw error;
+        }
+    };
+
+    deleteProductFrom = async(productId, cartId) => {
+        try {
+            if(!mongoose.Types.ObjectId.isValid(cartId)) {
+                throw new Error(
+                    `El ID ${cartId} no es valido.`
+                )
             }
 
-            await cartModel.findByIdAndUpdate(
+            const cart = await cartModel.findById(cartId);
+            if(!cart) {
+                throw new Error(`El carrito con el id ${cartId} no se encuentra en la lista.`)
+            }
+
+            try {
+                await productManager.getProductById(productId);
+            } catch(error) {
+                throw error;
+            }
+
+            if(await this.productAlreadyInCart(productId, cartId)) {
+                const result = await cartModel.updateOne(
+                    { _id: cartId },
+                    { $pull: { products: { product: productId } } }
+                );
+
+                if(result.modifiedCount == 0) {
+                    throw new Error(`Ocurrio un error al momento de borrar el producto`);
+                }
+            } else {
+                throw new Error(
+                    `El producto con ID ${productId} no se encuentra en el carrito con ID ${cartId}`
+                );
+            }
+
+        } catch(error) {
+            throw error;
+        }
+    };
+
+    deleteAllProductsFrom = async(cartId) => {
+        try {
+            if(!mongoose.Types.ObjectId.isValid(cartId)) {
+                throw new Error(
+                    `El ID ${cartId} no es valido.`
+                )
+            }
+
+            const cart = await cartModel.findById(cartId);
+            if(!cart) {
+                throw new Error(`El carrito con el id ${cartId} no se encuentra en la lista.`)
+            }
+
+            const result = await cartModel.updateOne(
                 { _id: cartId },
-                { products: products}
+                { $set: { products: [] } }
             );
 
+            if(result.modifiedCount == 0) {
+                throw new Error(`Ocurrio un error al momento de borrar los productos`);
+            }
+
+        } catch(error) {
+            throw error;
+        }
+    };
+
+    updateProductQuantity = async(cartId, productId, productQuantity) => {
+        try {
+            if(!mongoose.Types.ObjectId.isValid(cartId)) {
+                throw new Error(
+                    `El ID ${cartId} no es valido.`
+                )
+            }
+
+            const cart = await cartModel.findById(cartId);
+            if(!cart) {
+                throw new Error(`El carrito con el id ${cartId} no se encuentra en la lista.`)
+            }
+
+            try {
+                await productManager.getProductById(productId);
+            } catch(error) {
+                throw error;
+            }
+
+            if(await this.productAlreadyInCart(productId, cartId)) {
+                const result = await cartModel.updateOne(
+                    { _id: cartId, "products.product": productId},
+                    { $set: { "products.$.quantity": productQuantity } }
+                );
+
+                if(result.modifiedCount == 0) {
+                    throw new Error(
+                        `Ocurrio un error al momento de actualizar la cantidad del producto`
+                    );
+                }
+            } else {
+                throw new Error(
+                    `El producto con ID ${productId} no se encuentra en el carrito con ID ${cartId}`
+                );
+            }
+
+        } catch(error) {
+            throw error;
+        }
+    };
+
+    updateCartWith = async(cartId, newProducts) => {
+        try {
+            if(!mongoose.Types.ObjectId.isValid(cartId)) {
+                throw new Error(
+                    `El ID ${cartId} no es valido.`
+                )
+            }
+
+            const cart = await cartModel.findById(cartId);
+            if(!cart) {
+                throw new Error(`El carrito con el id ${cartId} no se encuentra en la lista.`)
+            }
+
+            const result = await cartModel.updateOne(
+                { _id: cartId },
+                { $set: { products: newProducts } }
+            );
+
+            if(result.modifiedCount == 0) {
+                throw new Error(
+                    `Ocurrio un error al momento de actualizar los productos del carrito`
+                );
+            }
         } catch(error) {
             throw error;
         }

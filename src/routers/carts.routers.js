@@ -32,7 +32,7 @@ router.get("/:cid", async(req, res) => {
     }
 });
 
-router.post("/:cid/product/:pid", async(req, res) => {
+router.post("/:cid/products/:pid", async(req, res) => {
     try {
         const { cid, pid } = req.params;
         await cartManager.addProduct(cid, pid);
@@ -43,6 +43,78 @@ router.post("/:cid/product/:pid", async(req, res) => {
         });
     } catch(error) {
         return res.status(400).send({ status: "failed", description: error.message});
+    }
+});
+
+router.delete("/:cid/products/:pid", async(req, res) => {
+    try {
+        const { cid, pid } = req.params;
+        await cartManager.deleteProductFrom(pid, cid);
+
+        return res.status(200).send({
+            status: "success",
+            description: `El producto con ID ${pid} fue eliminado exitosamente del carrito con ID ${cid}`
+        });
+    } catch(error) {
+        return res.status(400).send({
+            status: "failed",
+            description: error.message
+        });
+    }
+});
+
+router.delete("/:cid", async(req, res) => {
+    try {
+        const { cid } = req.params;
+        await cartManager.deleteAllProductsFrom(cid);
+
+        return res.status(200).send({
+            status: "success",
+            description: `Se eliminaron todos los productos del carrito con ID ${cid}`
+        });
+    } catch(error) {
+        return res.status(400).send({
+            status: "failed",
+            description: error.message
+        });
+    }
+});
+
+router.put("/:cid/products/:pid", async(req, res) => {
+    try {
+        const { cid, pid } = req.params;
+        const { quantity } = req.body;
+
+        await cartManager.updateProductQuantity(cid, pid, quantity);
+
+        return res.status(200).send({
+            status: "success",
+            description: `Se actualizo correctamente la cantidad del producto con ID ${pid} en el carrito con ID ${cid}`
+        });
+    } catch(error) {
+        return res.status(400).send({
+            status: "failed",
+            description: error.message
+        });
+    }
+});
+
+router.put("/:cid", async(req, res) => {
+    try {
+        const { cid } = req.params;
+        const products = req.body;
+
+        await cartManager.updateCartWith(cid, products);
+
+        return res.status(200).send({
+            status: "success",
+            description: `Se actualizo correctamente los productos del carrito con ID ${cid}`
+        });
+    } catch(error) {
+        return res.status(400).send({
+            status: "failed",
+            description: error.message
+        });
     }
 });
 
