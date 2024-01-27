@@ -9,11 +9,12 @@ router.post("/", async (req, res) => {
     try {
         const products = req.body;
 
-        await cartManager.addCart(products);
+        const { _id: id } = await cartManager.addCart(products);
 
         return res.status(201).send({ 
             status: "success", 
-            description: "El carrito fue agregado correctamente."
+            description: "El carrito fue agregado correctamente.",
+            cartId: id.toString()
         });
     } catch(error) {
         return res.status(400).send({ status: "failed", description: error.message});
