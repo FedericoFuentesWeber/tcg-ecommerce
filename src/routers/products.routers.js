@@ -8,19 +8,64 @@ const router = Router();
 const productManager = new ProductManagerDB();
 
 router.get("/", async(req, res) => {
+    // try {
+    //     const products = await productManager.getProducts();
+    //     const { limit } = req.query;
+
+    //     if(!limit) {
+    //         return res.status(200).send(products);
+    //     } else {
+    //         const selectedProducts = products.slice(0, limit);
+    //         return res.status(200).send(selectedProducts);
+    //     }
+
+    // } catch(error) {
+    //     return res.status(400).send({ status: "failed", description: error.message });
+    // }
     try {
-        const products = await productManager.getProducts();
-        const { limit } = req.query;
+        const {
+            limit: queryLimit = 10,
+            page: queryPage  =1,
+            sort: querySort,
+            query
+        } = req.query;
 
-        if(!limit) {
-            return res.status(200).send(products);
-        } else {
-            const selectedProducts = products.slice(0, limit);
-            return res.status(200).send(selectedProducts);
-        }
+        const queryParams = {
+            limit: parseInt(queryLimit),
+            page: parseInt(queryPage),
+            ...(querySort && { sort: { price: querySort } }),
+            ...(query && { query })
+        };
 
+        const {
+            docs,
+            totalPages,
+            prevPage,
+            nextPage,
+            page,
+            hasPrevPage,
+            hasNextPage,
+            prevLink,
+            nextLink
+        } = await productManager.filteredProductsBy(queryParams);
+
+        return res.status(200).send({
+            status: "success",
+            payload: productManager.parseProducts(docs),
+            totalPages,
+            prevPage,
+            nextPage,
+            page,
+            hasPrevPage,
+            hasNextPage,
+            prevLink,
+            nextLink
+        });
     } catch(error) {
-        return res.status(400).send({ status: "failed", description: error.message });
+        return res.status(400).send({
+            status: "failed",
+            payload: error.message
+        });
     }
 });
 

@@ -124,4 +124,21 @@ export class ProductManagerDB {
             console.error(error.message);
         }
     };
+
+    filteredProductsBy = async(queryParams) => {
+        try {
+            const filteredProducts = await productModel.paginate({}, queryParams);
+            return filteredProducts;
+        } catch(error) {
+            console.error(error.message);
+        }
+    }
+
+    parseProducts = (productToParse) => {
+        const parsedProducts = productToParse.map(
+            (product) => new Product(product)
+        );
+
+        return parsedProducts;
+    }
 }
