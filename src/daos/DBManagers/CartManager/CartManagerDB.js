@@ -54,7 +54,7 @@ export class CartManagerDB {
                 )
             }
 
-            const cart = await cartModel.findOne({ _id: cartId });
+            const cart = await cartModel.findOne({ _id: cartId }).lean();
 
             if(!cart) {
                 throw new Error(`El carrito con el id ${cartId} no se encuentra en la lista.`)

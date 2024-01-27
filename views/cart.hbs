@@ -1,0 +1,47 @@
+<main>
+    <div class="d-flex justify-content-center p-3">
+        <h1>Carrito</h1>
+        <a class="btn btn-md" onclick="deleteAllProductsFrom('{{cartId}}')">
+            Vaciar carrito
+        </a>
+    </div>
+
+    <section>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Título</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Imagen</th>
+                    <th scope="col">Acción</th>
+                </tr>
+            </thead>
+            <tbody id="cart_body">
+                {{#each products}}
+                    <tr>
+                        <td>{{this.product.title}}</td>
+                        <td>{{this.quantity}}</td>
+                        <td>${{this.product.price}}</td>
+                        <td class="px-4">
+                            <a onclick="showImage('{{this.product.thumbnails}}')" class="btn-sm clickable">
+                                Imagen
+                            </a>
+                        </td>
+                        <td class="px-4">
+                            <a onclick="deleteProductFrom('{{this.product._id}}', '{{../cartId}}')" class="btn-sm clickable">
+                                Borrar
+                            </a>
+                        </td>
+                    </tr>
+                {{else}}
+                    <tr>
+                        <td colspan="7">No hay productos</td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </section>
+</main>
+
+<script src="/js/cart.js"></script>

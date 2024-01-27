@@ -2,7 +2,8 @@ import express from "express";
 import productRouter from "./routers/products.routers.js";
 import cartRouter from "./routers/carts.routers.js";
 import chatRouter from "./routers/chat.routers.js"
-import productsViewRouter from "./routers/views.routers.js"
+import productsViewRouter from "./routers/productsViews.routers.js";
+import cartsViewRouter from "./routers/cartsViews.routers.js";
 import handlebars from 'express-handlebars';
 import __dirname from '../utils.js';
 import { Server as ServerIO } from 'socket.io';
@@ -35,11 +36,11 @@ app.engine('hbs', handlebars.engine({
 app.set('view engine', 'hbs');
 app.set('views', __dirname+'/views');
 
-app.use("/", productsViewRouter)
+app.use("/", productsViewRouter);
+app.use("/carts", cartsViewRouter);
 app.use("/api/products", productRouter);
 app.use("/api/carts", cartRouter);
 app.use("/chat", chatRouter);
-
 
 const httpServer = app.listen(PORT, () => {
     console.log(`Escuchando en el puerto ${PORT}`)
