@@ -78,7 +78,7 @@ export class ProductManagerDB {
         try {
             const products = await productModel.findOne({});
 
-            if(!products.length) {
+            if(!products) {
                 throw new Error("No hay ningún producto.")
             }
 

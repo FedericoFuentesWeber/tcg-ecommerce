@@ -17,7 +17,7 @@ const cartSchema = new Schema({
 });
 
 cartSchema.pre("findOne", function () {
-    this.populate("products.prodcut");
+    this.populate("products.product");
 });
 
 export default model(collection, cartSchema);
