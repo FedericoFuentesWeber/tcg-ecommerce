@@ -107,7 +107,7 @@ export class ProductManagerDB {
             const result = await productModel.deleteOne({ _id: productToDelete.id });
 
             if(!result.deletedCount >0) {
-                throw new Error(`No se encontró el producto con DI ${productId}`);
+                throw new Error(`No se encontró el producto con ID ${productId}`);
             }
         } catch(error) {
             throw error;
