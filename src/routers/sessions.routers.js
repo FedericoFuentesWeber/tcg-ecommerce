@@ -1,6 +1,10 @@
 import { Router } from "express";
-import { auth } from "../middleware/authentication.middleware.js";
 import { UserManagerDB } from "../daos/DBManagers/UserManager/UserManagerDB.js";
+import { 
+    ADMIN_MAIL,
+    ADMIN_PASSWORD,
+    ADMIN_ROLE 
+} from "../middleware/authentication.middleware.js";
 
 const router = Router();
 
@@ -16,13 +20,26 @@ router.get('/session', async(req, res) => {
     }
 });
 
-router.post('/login', auth, async(req, res) => {
+router.post('/login', async(req, res) => {
     try {
         const { email, password } = req.body;
 
-        const foundUser = await userManager.getUserByInformation({ email, password });
+        if(email == ADMIN_MAIL || password == ADMIN_PASSWORD) {
+            req.session.user = {
+                id: "1",
+                email: ADMIN_MAIL,
+                role: ADMIN_ROLE
+            };
 
-        if(!foundUser) {
+            return res.status(200).send({
+                status: "success",
+                payload: "Login ok"
+            });
+        }
+
+        const user = await userManager.getUserByInformation( email, password );
+
+        if(!user) {
             return res.send({
                 status: "error",
                 error: "No existe el usuario"
@@ -30,14 +47,14 @@ router.post('/login', auth, async(req, res) => {
         }
 
         req.session.user = {
-            id: user.id,
-            username: user.first_name,
-            role: user.role
+            id: user._id,
+            email: user.email,
+            role: "User"
         };
 
         res.status(200).send({
             status: "success",
-            payload: foundUser
+            payload: "Login ok"
         });
     } catch (error) {
         return res.status(400).send({
@@ -91,9 +108,5 @@ router.get('/logout', async(req, res) => {
         });
     });
 });
-
-router.get('/current', auth, async(req, res) => {
-    res.send("Datos sensibles");
-})
 
 export default router;

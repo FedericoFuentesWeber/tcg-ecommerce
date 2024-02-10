@@ -1,5 +1,6 @@
 import { User } from "../../../main/User/User.js";
 import userModel from "../../../models/user.model.js";
+import mongoose from "mongoose";
 
 export class UserManagerDB {
     createNewUser = async ({
@@ -30,7 +31,7 @@ export class UserManagerDB {
 
             const newUser = await this.createNewUser(user);
 
-            userModel.create(newUser);
+            return await userModel.create(newUser);
         } catch(error) {
             console.error(error.message);
         }
@@ -75,15 +76,14 @@ export class UserManagerDB {
     getUserByInformation = async(userEmail, userPassword) => {
         try {
             const users = await userModel.find({});
-
+            
             if(!users.length) {
                 throw new Error("No hay ningún usuario");
             }
 
             const user = await userModel.findOne({ email: userEmail, password: userPassword }).lean();
-
             if(!user) {
-                throw new Error(`El usuario con ID ${userId} no se encuentra en la lista`);
+                throw new Error(`El usuario con email ${userEmail} no se encuentra en la lista`);
             }
 
             return user;

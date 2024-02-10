@@ -1,4 +1,3 @@
-
 const register = async() => {
     const formData = new FormData(authForm);
     const parsedFormData = {}
@@ -53,11 +52,13 @@ const login = async() => {
                 "Content-type": "application/json; charset=UTF-8"
             }
         });
+        console.log("got response...");
 
         if(!response.ok) {
             const parsedResponse = await response.json();
             throw new Error(parsedResponse.payload);
         }
+        console.log("response ok.....");
 
         Swal.fire({
             text: "Login exitoso",
@@ -70,10 +71,10 @@ const login = async() => {
                     throw error;
                 }
             }
-        })
+        });
     } catch (error) {
         Swal.fire({
-            text: "No pudo iniciar sesión",
+            text: `No se pudo iniciar sesión, error: ${error.message}`,
             icon: "warning"
         });
     }
