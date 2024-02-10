@@ -1,6 +1,5 @@
 import passport from 'passport';
 import local from 'passport-local';
-import userModel from "../models/user.model.js";
 import { UserManagerDB } from '../daos/DBManagers/UserManager/UserManagerDB.js';
 import { createHash, isValidPassword } from "../../utils.js";
 
@@ -34,6 +33,7 @@ const initializePassport = () => {
     passport.use('login', new LocalStrategy({
         usernameField: 'email'
     }, async(username, password, done) => {
+        console.log("during login...")
         try {
             const user = await userManager.getUserByEmail(username);
             if(!user) {
@@ -42,6 +42,7 @@ const initializePassport = () => {
             }
 
             if(!isValidPassword(password, user.password)) {
+                console.log("invalid pass");
                 return done(null, false);
             }
 

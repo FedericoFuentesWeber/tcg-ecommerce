@@ -1,6 +1,7 @@
 const register = async() => {
     const formData = new FormData(authForm);
-    const parsedFormData = {}
+    const parsedFormData = {};
+
     try {
         formData.forEach((value, key) => {
             parsedFormData[key] = value;
@@ -12,7 +13,6 @@ const register = async() => {
                 "Content-type": "application/json; charset=UTF-8"
             }
         });
-
         if(!response.ok) {
             const parsedResponse = await response.json();
             throw new Error(parsedResponse.payload);
@@ -45,6 +45,7 @@ const login = async() => {
         formData.forEach((value, key) => {
             parsedFormData[key] = value;
         });
+
         const response = await fetch("/api/sessions/login", {
             method: "POST",
             body: JSON.stringify(parsedFormData),
@@ -52,8 +53,9 @@ const login = async() => {
                 "Content-type": "application/json; charset=UTF-8"
             }
         });
-        
+
         if(!response.ok) {
+            console.log("response not ok");
             const parsedResponse = await response.json();
             throw new Error(parsedResponse.payload);
         }
@@ -77,6 +79,8 @@ const login = async() => {
         });
     }
 };
+
+const authForm = document.getElementById("authForm");
 
 authForm.addEventListener("submit", function(event) {
     event.preventDefault();

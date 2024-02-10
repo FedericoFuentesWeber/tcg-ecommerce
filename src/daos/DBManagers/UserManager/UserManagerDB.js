@@ -140,7 +140,7 @@ export class UserManagerDB {
 
             return !!user;
         } catch (error) {
-            throw error;
+            throw new Error(`El usuario con email: ${email} ya existe`);
         }
     }
     
