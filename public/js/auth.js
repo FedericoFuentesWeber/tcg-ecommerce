@@ -52,13 +52,11 @@ const login = async() => {
                 "Content-type": "application/json; charset=UTF-8"
             }
         });
-        console.log("got response...");
-
+        
         if(!response.ok) {
             const parsedResponse = await response.json();
             throw new Error(parsedResponse.payload);
         }
-        console.log("response ok.....");
 
         Swal.fire({
             text: "Login exitoso",

@@ -29,9 +29,13 @@ export class UserManagerDB {
                 throw new Error("Hay parámetros sin completar.")
             }
 
-            const newUser = await this.createNewUser(user);
-
-            return await userModel.create(newUser);
+            if(!(await this.userHasAlreadyBeenAdded(user.email))) {
+                const newUser = await this.createNewUser(user);
+                return await userModel.create(newUser);
+            } else {
+                throw new Error(`El usuario con email ${user.email} ya se encuentra registrado`);
+            }
+            
         } catch(error) {
             console.error(error.message);
         }
@@ -127,5 +131,17 @@ export class UserManagerDB {
         }
     }
 
+
+    userHasAlreadyBeenAdded = async(email) => {
+        try {
+            const user = await userModel.findOne({
+                email: email
+            });
+
+            return !!user;
+        } catch (error) {
+            throw error;
+        }
+    }
     
 }

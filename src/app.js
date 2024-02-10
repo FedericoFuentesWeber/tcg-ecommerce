@@ -15,6 +15,8 @@ import { MessageManagerDB } from "./daos/DBManagers/MessageManager/MessageManage
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import passport from 'passport';
+import initializePassport from "./config/passport.config.js";
 
 const messageManager = new MessageManagerDB();
 
@@ -39,6 +41,9 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.engine('hbs', handlebars.engine({
     extname: ".hbs",
