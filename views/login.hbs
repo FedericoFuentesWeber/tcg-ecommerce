@@ -1,4 +1,4 @@
-<form id="loginForm" action="/api/sessions/login" method="POST">
+<form id="authForm" name="loginForm" action="/api/sessions/login" method="POST">
     <label for="email"> Email </label><br>
     <input type="text" name="email" placeholder="Ingrese su email" /><br>
     <label for="password"> Password </label><br>
@@ -6,9 +6,4 @@
 
     <button type="submit"> Login </button>
 </form>
-<script>
-    document.getElementById('loginForm').addEventListener('submit', function (event) {
-        event.preventDefault();
-        window.location.href = '/products';
-    });
-</script>
+<script src="js/auth.js"></script>

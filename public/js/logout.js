@@ -1,18 +1,10 @@
-const showImage = (imageUrl) => {
-    Swal.fire({
-        imageUrl: imageUrl,
-        imageWidth: 600,
-        imageHeight: 550,
-        imageAlt: "Product image",
-        showConfirmButton: false
-    });
-};
 
 const logout = async() => {
     try {
-        const response = await fetch("/api/sessions/logout", {
+        const response = await fetch("/api/session/logout", {
             method: "GET"
         });
+
         if(!response.ok) {
             const parsedResponse = await response.json();
             throw new Error(parsedResponse.payload);

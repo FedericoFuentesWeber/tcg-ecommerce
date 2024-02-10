@@ -78,10 +78,18 @@ router.post('/register', async(req, res) => {
 
 router.get('/logout', async(req, res) => {
     req.session.destroy(error => {
-        if(error) res.send('Logout error');
-    });
+        if(error){
+            return res.status(400).send({
+                status: "failed",
+                payload: error.message
+            });
+        }
 
-    res.status(200).redirect("/login");
+        return res.status(200).send({
+            status: "success",
+            payload: "Logout done"
+        });
+    });
 });
 
 router.get('/current', auth, async(req, res) => {
