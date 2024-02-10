@@ -5,6 +5,7 @@ import {
     ADMIN_PASSWORD,
     ADMIN_ROLE 
 } from "../middleware/authentication.middleware.js";
+import { createHash, isValidPassword } from "../../utils.js";
 
 const router = Router();
 
@@ -37,13 +38,21 @@ router.post('/login', async(req, res) => {
             });
         }
 
-        const user = await userManager.getUserByInformation( email, password );
+        // const user = await userManager.getUserByInformation( email, password );
+        const user = await userManager.getUserByEmail( email);
 
         if(!user) {
             return res.send({
                 status: "error",
                 error: "No existe el usuario"
             });
+        }
+
+        if(!isValidPassword(password, user.password)) {
+            return res.status(403).send({
+                status: "failed",
+                payload: "Invalid password"
+            })
         }
 
         req.session.user = {
@@ -77,7 +86,7 @@ router.post('/register', async(req, res) => {
             first_name,
             last_name,
             email,
-            password
+            password: createHash(password)
         });
 
         res.status(200).send({

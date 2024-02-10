@@ -94,6 +94,26 @@ export class UserManagerDB {
         }
     };
 
+    getUserByEmail = async(userEmail) => {
+        try {
+            const users = await userModel.find({});
+
+            if(!users.length) {
+                throw new Error("No hay ningún usuario");
+            }
+
+            const user = await userModel.findOne({ email: userEmail }).lean();
+            if(!user) {
+                throw new Error(`El usuario con email ${userEmail} no se encuentra en la lista`);
+            }
+
+            return user;
+        } catch (error) {
+            console.error(error.message);
+            return null;
+        }
+    }
+
     deleteUser = async(userId) => {
         try {
             const userToDelete = await this.getUserById(userId);
