@@ -1,7 +1,10 @@
 import passport from 'passport';
 import local from 'passport-local';
+import GithubStrategy from 'passport-github2';
 import { UserManagerDB } from '../daos/DBManagers/UserManager/UserManagerDB.js';
 import { createHash, isValidPassword } from "../../utils.js";
+import userModel from '../models/user.model.js';
+import mongoose from 'mongoose';
 
 const LocalStrategy = local.Strategy;
 const userManager = new UserManagerDB();
@@ -14,7 +17,7 @@ const initializePassport = () => {
         const { first_name, last_name, email } = req.body;
 
         try {
-            let foundUser = await userManager.userHasAlreadyBeenAdded(email);
+            let foundUser = await userModel.findOne({email});
             if(foundUser) return done(null, false);
 
             const user = await userManager.addUser({
@@ -57,9 +60,35 @@ const initializePassport = () => {
     });
 
     passport.deserializeUser(async (id, done) => {
-        const user = await userManager.getUserById(id);
+        const user = await userModel.findById({_id: id});
         done(null, user);
     });
+
+    passport.use('github', new GithubStrategy({
+        clientID: 'Iv1.ec6d76754baf8cd7',
+        clientSecret: 'f74b24c52d60aaa66a3dfe703f88e4c8f7fbcb66',
+        callbackURL: 'http://localhost:8080/api/sessions/githubcallback'
+    }, async(accessToken, refreshToken, profile, done) => {
+        console.log('profile', profile);
+        try {
+            let foundUser = await userModel.findOne({email: profile._json.email});
+            console.log("user", foundUser);
+            if(foundUser === null) {
+                let user = await userManager.addUser({
+                    first_name: profile._json.name,
+                    last_name: profile._json.name,
+                    email: profile._json.email,
+                    password: ''
+                });
+
+                return done(null, user);
+            }
+
+            return done(null, foundUser);
+        } catch (error) {
+            return done(error);
+        }
+    }));
 }
 
 export default initializePassport;

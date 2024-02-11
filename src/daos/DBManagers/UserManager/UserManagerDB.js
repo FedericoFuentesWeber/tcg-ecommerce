@@ -23,18 +23,14 @@ export class UserManagerDB {
             if(
                 !user.first_name ||
                 !user.last_name ||
-                !user.email ||
-                !user.password
+                !user.email //||
+                // !user.password
             ) {
                 throw new Error("Hay parámetros sin completar.")
             }
 
-            if(!(await this.userHasAlreadyBeenAdded(user.email))) {
-                const newUser = await this.createNewUser(user);
-                return await userModel.create(newUser);
-            } else {
-                throw new Error(`El usuario con email ${user.email} ya se encuentra registrado`);
-            }
+            const newUser = await this.createNewUser(user);
+            return await userModel.create(newUser);
             
         } catch(error) {
             console.error(error.message);
@@ -58,6 +54,7 @@ export class UserManagerDB {
             }
 
             if(!mongoose.Types.ObjectId.isValid(userId)) {
+                console.log("id 1", userId);
                 throw new Error(
                     `El ID ${userId} no es valido.`
                 )
@@ -128,19 +125,6 @@ export class UserManagerDB {
             }
         } catch (error) {
             throw error;
-        }
-    }
-
-
-    userHasAlreadyBeenAdded = async(email) => {
-        try {
-            const user = await userModel.findOne({
-                email: email
-            });
-
-            return !!user;
-        } catch (error) {
-            throw new Error(`El usuario con email: ${email} ya existe`);
         }
     }
     
