@@ -123,10 +123,12 @@ router.post('/login', async(req, res) => {
         email: user.email
     });
 
-    res.status(200).send({
+    res.status(200).cookie('cookieToken', token, {
+        maxAge: 60*60*1000*24,
+        httpOnly: true
+    }).send({
         status: "success",
-        usersCreate: "Login success",
-        token
+        usersCreate: "Login success"
     });
 });
 
@@ -144,14 +146,16 @@ router.post('/register', async(req, res) => {
         id: result._id
     });
 
-    res.status(200).send({
+    res.status(200).cookie('cookieToken', token, {
+        maxAge: 60*60*1000*24,
+        httpOnly: true
+    }).send({
         status: "success",
-        usersCreate: result,
-        token
+        usersCreate: result
     });
 });
 
-router.get('/current', authTokenMiddleware, async(req, res) => {
+router.get('/current', passport.authenticate('jwt', {session: false}), async(req, res) => {
     res.send({
         message:"Datos sensibles"
     });

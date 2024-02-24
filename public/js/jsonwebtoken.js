@@ -21,4 +21,4 @@ const authTokenMiddleware = (req, res, next) => {
     });
 }
 
-export {genertateToken, authTokenMiddleware}
+export {genertateToken, authTokenMiddleware, PRIVATE_KEY}
