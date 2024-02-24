@@ -54,7 +54,6 @@ export class UserManagerDB {
             }
 
             if(!mongoose.Types.ObjectId.isValid(userId)) {
-                console.log("id 1", userId);
                 throw new Error(
                     `El ID ${userId} no es valido.`
                 )

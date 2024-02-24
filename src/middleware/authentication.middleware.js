@@ -11,7 +11,7 @@ async function auth (req, res, next) {
     try {
         if((req.session?.user.email === ADMIN_MAIL && 
             req.session?.user.role === ADMIN_ROLE) ||
-            (await userManager.getUserById(mongoose.Types.ObjectId(req.session?.user.id)))
+            (await userManager.getUserById(mongoose.Types.ObjectId(req.session?.user._id)))
         ) 
           return next();
     

@@ -5,8 +5,13 @@ import {
     ADMIN_ROLE 
 } from "../middleware/authentication.middleware.js";
 import passport from 'passport';
+import { genertateToken, authTokenMiddleware } from "../../public/js/jsonwebtoken.js";
+import userModel from "../models/user.model.js";
+import { createHash, isValidPassword } from "../../utils.js";
+import { UserManagerDB } from "../daos/DBManagers/UserManager/UserManagerDB.js";
 
 const router = Router();
+const userManager = new UserManagerDB();
 
 router.get('/session', async(req, res) => {
     if (req.session.counter) {
@@ -18,7 +23,7 @@ router.get('/session', async(req, res) => {
     }
 });
 
-router.post('/register', passport.authenticate('register', {failureRedirect: '/api/sessions/failregister'}), async(req, res) => {
+router.post('/registerPassport', passport.authenticate('register', {failureRedirect: '/api/sessions/failregister'}), async(req, res) => {
     res.send({
         status: "success",
         payload: "User registered"
@@ -32,7 +37,7 @@ router.get('/failregister', async(req, res) => {
     })
 });
 
-router.post('/login', passport.authenticate('login', {failureRedirect: '/api/sessions/faillogin'}), async(req, res) => {
+router.post('/loginPassport', passport.authenticate('login', {failureRedirect: '/api/sessions/faillogin'}), async(req, res) => {
     if(!req.user) {
         return res.status(400).send({
             status: "failed",
@@ -95,6 +100,59 @@ router.get('/logout', async(req, res) => {
             payload: "Logout done"
         });
     });
+});
+
+
+//JWT
+router.post('/login', async(req, res) => {
+    const { email, password } = req.body;
+
+    // const user = await userModel.findOne({ email });
+    const user = await userManager.getUserByEmail(email);
+
+    if(!isValidPassword(password, user.password)){
+        return res.status(401).send({
+            status: 'failed',
+            payload: "No coincide las credenciales"
+        });
+    }
+
+    const token = genertateToken({
+        fullname: `${user.first_name} ${user.last_name}`,
+        id: user._id,
+        email: user.email
+    });
+
+    res.status(200).send({
+        status: "success",
+        usersCreate: "Login success",
+        token
+    });
+});
+
+router.post('/register', async(req, res) => {
+    const { first_name, last_name, email, password } = req.body;
+
+    const result = await userManager.addUser({
+        first_name,
+        last_name,
+        email,
+        password: createHash(password)
+    });
+
+    const token = genertateToken({
+        id: result._id
+    });
+
+    res.status(200).send({
+        status: "success",
+        usersCreate: result,
+        token
+    });
+});
+
+router.get('/current', async(req, res) => {
+    res.send("Datos sensibles");
 });
 
 export default router;

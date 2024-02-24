@@ -28,22 +28,22 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname+'/public'));
 app.use(cookieParser("cookiePassword"));
-app.use(session({
-    store: MongoStore.create({
-        mongoUrl: DB_URL,
-        mongoOptions: {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        },
-        ttl: 15
-    }),
-    secret: 'sessionSecret',
-    resave: true,
-    saveUninitialized: true
-}));
-initializePassport();
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(session({
+//     store: MongoStore.create({
+//         mongoUrl: DB_URL,
+//         mongoOptions: {
+//             useNewUrlParser: true,
+//             useUnifiedTopology: true
+//         },
+//         ttl: 15
+//     }),
+//     secret: 'sessionSecret',
+//     resave: true,
+//     saveUninitialized: true
+// }));
+// initializePassport();
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 app.engine('hbs', handlebars.engine({
     extname: ".hbs",
