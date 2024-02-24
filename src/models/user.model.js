@@ -23,6 +23,9 @@ const userSchema = new Schema ({
         type: String,
         enum: ['USER', 'ADMIN'],
         default: 'USER'
+    },
+    age: {
+        type: Number
     }
 });
 
