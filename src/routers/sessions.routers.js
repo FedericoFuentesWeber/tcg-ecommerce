@@ -9,6 +9,8 @@ import { genertateToken, authTokenMiddleware } from "../../public/js/jsonwebtoke
 import userModel from "../models/user.model.js";
 import { createHash, isValidPassword } from "../../utils.js";
 import { UserManagerDB } from "../daos/DBManagers/UserManager/UserManagerDB.js";
+import { passportCall } from "../middleware/passportCall.middleware.js";
+import { authorization } from "../middleware/authorization.middleware.js";
 
 const router = Router();
 const userManager = new UserManagerDB();
@@ -119,7 +121,7 @@ router.post('/login', async(req, res) => {
 
     const token = genertateToken({
         fullname: `${user.first_name} ${user.last_name}`,
-        id: user._id,
+        role: user.role,
         email: user.email
     });
 
@@ -155,7 +157,7 @@ router.post('/register', async(req, res) => {
     });
 });
 
-router.get('/current', passport.authenticate('jwt', {session: false}), async(req, res) => {
+router.get('/current', passportCall('jwt'), authorization("USER"), async(req, res) => {
     res.send({
         message:"Datos sensibles"
     });

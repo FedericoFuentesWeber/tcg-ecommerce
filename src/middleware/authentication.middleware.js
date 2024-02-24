@@ -5,7 +5,7 @@ const userManager = new UserManagerDB();
 
 const ADMIN_MAIL = "adminCoder@coder.com";
 const ADMIN_PASSWORD = "adminCod3r123";
-const ADMIN_ROLE = "Admin"
+const ADMIN_ROLE = "ADMIN"
 
 async function auth (req, res, next) {
     try {
