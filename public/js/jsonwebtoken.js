@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 const PRIVATE_KEY = 'secretTokenWord';
 
 const genertateToken = (user) => {
-    jwt.sign(user, PRIVATE_KEY, {expiresIn: '24h'});
+    return jwt.sign(user, PRIVATE_KEY, {expiresIn: '24h'});
 }
 
 const authTokenMiddleware = (req, res, next) => {

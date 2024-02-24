@@ -151,8 +151,10 @@ router.post('/register', async(req, res) => {
     });
 });
 
-router.get('/current', async(req, res) => {
-    res.send("Datos sensibles");
+router.get('/current', authTokenMiddleware, async(req, res) => {
+    res.send({
+        message:"Datos sensibles"
+    });
 });
 
 export default router;
