@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { UserManagerDB } from "../daos/DBManagers/UserManager/UserManagerDB.js";
 
 const userManager = new UserManagerDB();
@@ -10,7 +11,7 @@ async function auth (req, res, next) {
     try {
         if((req.session?.user.email === ADMIN_MAIL && 
             req.session?.user.role === ADMIN_ROLE) ||
-            (await userManager.getUserById(req.session?.user.id))
+            (await userManager.getUserById(mongoose.Types.ObjectId(req.session?.user._id)))
         ) 
           return next();
     
