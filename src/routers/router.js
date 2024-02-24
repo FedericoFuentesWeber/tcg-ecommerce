@@ -5,6 +5,7 @@ import { PRIVATE_KEY } from "../../public/js/jsonwebtoken.js";
 class RouterClass {
     constructor() {
         this.router = Router();
+        this.init();
     }
 
     getRouter = () => {
@@ -37,11 +38,14 @@ class RouterClass {
 
     handlePolicies = policies => (req, res, next) => {
         if(policies[0] === 'PUBLIC') next();
+        //Por alguna razón el header the authorization no esta por lo que tengo que usar el de cookie
+        // const authHeaders = req.headers.authorization;
         console.log(req.headers)
-        const authHeaders = req.headers.authorization;
-        const token = authHeaders.split(' ')[1];
+        const authHeaders = req.headers.cookie;
+        const token = authHeaders.split('=')[1];
         let user = jwt.verify(token, PRIVATE_KEY);
 
+        console.log("role", user.role.toUpperCase())
         if(!policies.includes(user.role.toUpperCase())) res.status(403).send({status: "error", error: "Role not valid"});
         req.user = user;
         next();

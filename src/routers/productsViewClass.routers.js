@@ -5,7 +5,7 @@ const productManager = new ProductManagerDB();
 
 class ProductsViews extends RouterClass {
     init() {
-        this.get('/products', ['PUBLIC'], async(req, res) => {
+        this.get('/products', ['PUBLIC', 'USER', 'ADMIN'], async(req, res) => {
             try {
                 const {
                     limit: queryLimit = 10,
@@ -57,7 +57,7 @@ class ProductsViews extends RouterClass {
                 });
             }
         });
-        this.get('/realtimeproducts', [PUBLIC], async(req, res) => {
+        this.get('/realtimeproducts', ['PUBLIC', 'USER', 'ADMIN'], async(req, res) => {
             try {
                 const products = await productManager.getProducts();
                 res.status(200).render("realTimeProducts", {

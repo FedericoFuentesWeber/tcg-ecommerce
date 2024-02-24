@@ -9,14 +9,29 @@ import loginViewRouter from "./loginViews.routers.js";
 
 // import { ProductsViews } from "./productsViewClass.routers.js";
 // import { ProductRouter } from "./productsClass.routers.js";
+// import { CartsRouter } from "./cartsClass.routers.js";
+// import { CartsView } from "./cartsViewClass.routers.js";
+// import { ChatRouter } from "./chatClass.routers.js";
+// import { SessionRouter } from "./sessionsClass.routers.js";
+// import { LoginViewsRouter } from "./loginViewClass.routers.js";
 
 
 const router = Router();
+// const loginViewRouter = new LoginViewsRouter();
 // const productsViewsRouter = new ProductsViews();
 // const productsRouter = new ProductRouter();
+// const cartsRouter = new CartsRouter();
+// const cartsViewsRouter = new CartsView();
+// const chatRouter = new ChatRouter();
+// const sessionRouter = new SessionRouter();
 
+// router.use('/', loginViewRouter.getRouter());
 // router.use("/", productsViewsRouter.getRouter());
 // router.use('/api/products', productsRouter.getRouter());
+// router.use('/api/carts', cartsRouter.getRouter());
+// router.use('/carts', cartsViewsRouter.getRouter());
+// router.use('/chat', chatRouter.getRouter());
+// router.use('/api/sessions', sessionRouter.getRouter());
 
 router.use("/", loginViewRouter);
 router.use("/", productsViewRouter);

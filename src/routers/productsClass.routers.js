@@ -3,9 +3,11 @@ import { ProductManagerDB } from "../daos/DBManagers/ProductManager/ProductManag
 import { io } from "../app.js";
 import { uploader } from "../../utils.js";
 
+const productManager = new ProductManagerDB();
+
 class ProductRouter extends RouterClass {
     init() {
-        this.get('/', ['PUBLIC'], async(req, res) => {
+        this.get('/', ['PUBLIC', 'USER', 'ADMIN'], async(req, res) => {
             try {
                 const {
                     limit: queryLimit = 10,
@@ -61,7 +63,7 @@ class ProductRouter extends RouterClass {
             }
         });
 
-        this.get('/:pid', ['PUBLIC'], async(req, res) => {
+        this.get('/:pid', ['PUBLIC', 'USER', 'ADMIN'], async(req, res) => {
             try {
                 const { pid } = req.params;
                 const foundProduct = await productManager.getProductById(pid);
@@ -73,7 +75,7 @@ class ProductRouter extends RouterClass {
             }
         });
 
-        this.put('/:pid', ['PUBLIC'], async(req, res) => {
+        this.put('/:pid', ['ADMIN'], async(req, res) => {
             try {
                 const { pid } = req.params;
                 const updatedProduct = req.body;
@@ -88,7 +90,7 @@ class ProductRouter extends RouterClass {
             }
         });
 
-        this.delete('/:pid', ['PUBLIC'], async(req, res) => {
+        this.delete('/:pid', ['ADMIN'], async(req, res) => {
             try {
                 const { pid } = req.params;
                 await productManager.deleteProduct(pid);
@@ -106,7 +108,7 @@ class ProductRouter extends RouterClass {
             }
         });
 
-        this.post('/', ['PUBLIC'], uploader.array("thumbnails"), async(req, res) => {
+        this.post('/', ['ADMIN'], uploader.array("thumbnails"), async(req, res) => {
             try {
                 const newProduct = req.body;
                 
