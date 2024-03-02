@@ -18,14 +18,14 @@ export class CartManagerDB {
         }
     };
 
-    addCart = async(products) => {
+    addCart = async(/*products*/) => {
         try {
 
-            if (!products || products.length === 0) {
-                throw new Error("No hay ningún producto en el carrito.");
-            }
+            // if (!products || products.length === 0) {
+            //     throw new Error("No hay ningún producto en el carrito.");
+            // }
 
-            const newCart = await this.createNewCart(products);
+            const newCart = await this.createNewCart([]/*products*/);
             return cartModel.create(newCart);
         } catch(error) {
             throw error;
