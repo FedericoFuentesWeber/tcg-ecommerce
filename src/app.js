@@ -1,15 +1,8 @@
 import express from "express";
-import productRouter from "./routers/products.routers.js";
-import cartRouter from "./routers/carts.routers.js";
-import chatRouter from "./routers/chat.routers.js"
-// import productsViewRouter from "./routers/productsViews.routers.js";
-import cartsViewRouter from "./routers/cartsViews.routers.js";
-import sessionsRouter from "./routers/sessions.routers.js";
-import loginViewRouter from "./routers/loginViews.routers.js";
 import handlebars from 'express-handlebars';
 import __dirname from '../utils.js';
 import { Server as ServerIO } from 'socket.io';
-import { connectDB } from "./config/config.js"
+import { config, connectDB } from "./config/config.js"
 import messageModel from "./models/message.model.js";
 import { MessageManagerDB } from "./daos/DBManagers/MessageManager/MessageManagerDB.js";
 import cookieParser from "cookie-parser";
@@ -22,7 +15,7 @@ const messageManager = new MessageManagerDB();
 const productsViews = new ProductsViews();
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = config.PORT;
 connectDB();
 
 app.use(express.json());

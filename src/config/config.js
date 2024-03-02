@@ -1,8 +1,20 @@
 import { connect } from "mongoose";
+import dotenv from 'dotenv';
 
-const DB_URL = 
-    'mongodb+srv://ffuentesweber:Ma3n9KcZFtYO7D5p@cluster0.ngmdz96.mongodb.net/tcg?retryWrites=true&w=majority';
+dotenv.config();
 
+const config = {
+    PORT: process.env.PORT || 8080,
+    DB_URL: process.env.DB_URL,
+    JWT_SECERET_KEY: process.env.JWT_SECERET_KEY,
+    CLIENT_ID: process.env.CLIENT_ID,
+    CLIENT_SECRET: process.env.CLIENT_SECRET,
+    CALLBACK_URL: process.env.CALLBACK_URL
+};
+
+
+const DB_URL = config.DB_URL;
+    
 const connectDB = async() => {
     try {
         await connect(DB_URL);
@@ -12,4 +24,4 @@ const connectDB = async() => {
     }
 };
 
-export { connectDB, DB_URL };
+export { connectDB, config };

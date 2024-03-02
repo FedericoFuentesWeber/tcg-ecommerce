@@ -1,10 +1,10 @@
 import { Router } from "express";
 import passport from 'passport';
-import { genertateToken, authTokenMiddleware } from "../../public/js/jsonwebtoken.js";
-import { createHash, isValidPassword } from "../../utils.js";
+import { genertateToken } from "../../public/js/jsonwebtoken.js";
 import { UserManagerDB } from "../daos/DBManagers/UserManager/UserManagerDB.js";
 import { passportCall } from "../middleware/passportCall.middleware.js";
 import { authorization } from "../middleware/authorization.middleware.js";
+import { createHash, isValidPassword } from "../utils/bcrypt.js";
 
 const router = Router();
 const userManager = new UserManagerDB();
