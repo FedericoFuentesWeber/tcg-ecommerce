@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { MessageManagerDB } from "../daos/DBManagers/MessageManager/MessageManagerDB.js";
 import { ChatController } from "../controllers/chat.controller.js";
 
 const router = Router();

@@ -9,7 +9,7 @@ const {
     login,
     register,
     logout
-} = new SessionController
+} = new SessionController();
 
 router.get('/github', passport.authenticate('github', {scope:['user: email']}), async(req, res) => {});
 router.get('/githubcallback', passport.authenticate('github', {failureRedirect: '/login'}), async(req, res) => {
