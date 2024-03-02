@@ -1,12 +1,13 @@
 import { Router } from "express";
 import { CartManagerDB } from "../daos/DBManagers/CartManager/CartManagerDB.js"; 
 import { auth } from "../middleware/authentication.middleware.js";
+import { passportCall } from "../middleware/passportCall.middleware.js";
 
 const router = Router();
 
 const cartManager = new CartManagerDB();
 
-router.get("/:cid", auth, async(req, res) => {
+router.get("/:cid", passportCall("jwt"), async(req, res) => {
     try {
         const { cid } = req.params;
         const { products } = await cartManager.getCartById(cid);

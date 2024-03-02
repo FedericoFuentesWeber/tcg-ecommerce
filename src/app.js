@@ -47,17 +47,6 @@ app.engine('hbs', handlebars.engine({
 app.set('view engine', 'hbs');
 app.set('views', __dirname+'/views');
 
-// app.use("/", loginViewRouter);
-// // app.use("/", productsViewRouter);
-// app.use("/", productsViews);
-// app.use("/carts", cartsViewRouter);
-// app.use("/api/products", productRouter);
-// app.use("/api/carts", cartRouter);
-// app.use("/chat", chatRouter);
-// app.use("/api/sessions", sessionsRouter);
-// app.get('*', async(req, res) => {
-//     res.send('NOT FOUND');
-// })
 app.use(appRouter);
 
 const httpServer = app.listen(PORT, () => {

@@ -26,6 +26,10 @@ const userSchema = new Schema ({
     },
     age: {
         type: Number
+    },
+    cartId: {
+        type: Schema.Types.ObjectId,
+        ref: "carts"
     }
 });
 

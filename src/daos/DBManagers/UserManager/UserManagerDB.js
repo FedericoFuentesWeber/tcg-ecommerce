@@ -1,20 +1,27 @@
 import { User } from "../../../main/User/User.js";
 import userModel from "../../../models/user.model.js";
 import mongoose from "mongoose";
+import { CartManagerDB } from "../CartManager/CartManagerDB.js";
+
+const cartManager = new CartManagerDB();
 
 export class UserManagerDB {
     createNewUser = async ({
         first_name,
         last_name,
         email,
-        password
+        password,
+        age
     }) => {
+        const { _id: id } = await cartManager.addCart();
         return new User({
             id: null,
-            first_name,
-            last_name,
-            email,
-            password
+            first_name: first_name,
+            last_name: last_name,
+            email: email,
+            password: password,
+            age: age,
+            cartId: id
         })
     };
 
@@ -23,8 +30,8 @@ export class UserManagerDB {
             if(
                 !user.first_name ||
                 !user.last_name ||
-                !user.email //||
-                // !user.password
+                !user.age ||
+                !user.email
             ) {
                 throw new Error("Hay parámetros sin completar.")
             }

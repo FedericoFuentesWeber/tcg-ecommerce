@@ -60,26 +60,25 @@ router.post('/login', async(req, res) => {
 });
 
 router.post('/register', async(req, res) => {
-    const { first_name, last_name, email, password } = req.body;
+    const { first_name, last_name, age, email, password } = req.body;
 
-    const result = await userManager.addUser({
-        first_name,
-        last_name,
-        email,
-        password: createHash(password)
-    });
-
-    const token = genertateToken({
-        id: result._id
-    });
-
-    res.status(200).cookie('cookieToken', token, {
-        maxAge: 60*60*1000*24,
-        httpOnly: true
-    }).send({
-        status: "success",
-        usersCreate: result
-    });
+    try {
+        const result = await userManager.addUser({
+            first_name,
+            last_name,
+            age,
+            email,
+            password: createHash(password)
+        });
+    
+        res.status(200).send({
+            status: "success",
+            usersCreate: result
+        });    
+    } catch (error) {
+        throw error;
+    }
+    
 });
 
 router.get('/current', passportCall('jwt'), authorization("USER"), async(req, res) => {
