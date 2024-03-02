@@ -1,6 +1,9 @@
 import { Router } from "express";
 import jwt from 'jsonwebtoken';
-import { PRIVATE_KEY } from "../../public/js/jsonwebtoken.js";
+import { config } from "../config/config.js";
+
+
+const JWT_SECRET_KEY = config.JWT_SECERET_KEY;
 
 class RouterClass {
     constructor() {
@@ -43,7 +46,7 @@ class RouterClass {
         console.log(req.headers)
         const authHeaders = req.headers.cookie;
         const token = authHeaders.split('=')[1];
-        let user = jwt.verify(token, PRIVATE_KEY);
+        let user = jwt.verify(token, JWT_SECRET_KEY);
 
         console.log("role", user.role.toUpperCase())
         if(!policies.includes(user.role.toUpperCase())) res.status(403).send({status: "error", error: "Role not valid"});

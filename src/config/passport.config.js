@@ -8,7 +8,8 @@ import { config } from './config.js';
 const CLIENT_ID = config.CLIENT_ID;
 const CLIENT_SECRET = config.CLIENT_SECRET;
 const CALLBACK_URL = config.CALLBACK_URL;
-const JWT_SECERET_KEY = config.JWT_SECERET_KEY; 
+const JWT_SECRET_KEY = config.JWT_SECRET_KEY;
+console.log("jwt", JWT_SECRET_KEY);
 
 const userManager = new UserManagerDB();
 const JWTStrategy  = passportJWT.Strategy;
@@ -28,7 +29,7 @@ const initializePassport = () => {
 
     passport.use('jwt', new JWTStrategy({
         jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
-        secretOrKey: JWT_SECERET_KEY
+        secretOrKey: JWT_SECRET_KEY
     }, async(jwt_payload, done) => {
         try {
             return done(null, jwt_payload);
@@ -38,7 +39,7 @@ const initializePassport = () => {
     }));
 
     passport.use('github', new GithubStrategy({
-        clienteID: CLIENT_ID,
+        clientID: CLIENT_ID,
         clientSecret: CLIENT_SECRET,
         callbackURL: CALLBACK_URL
     }, async(accessToken, refreshToken, profile, done) => {

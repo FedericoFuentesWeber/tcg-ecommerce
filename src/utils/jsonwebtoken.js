@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { config } from '../config/config';
+import { config } from '../config/config.js';
 
 const JWT_SECERET_KEY = config.JWT_SECERET_KEY;
 
