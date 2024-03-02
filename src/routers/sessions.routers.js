@@ -47,7 +47,8 @@ router.post('/login', async(req, res) => {
     const token = genertateToken({
         fullname: `${user.first_name} ${user.last_name}`,
         role: user.role,
-        email: user.email
+        email: user.email,
+        cartId: user.cartId._id
     });
 
     res.status(200).cookie('cookieToken', token, {
