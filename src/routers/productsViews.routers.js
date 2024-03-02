@@ -14,12 +14,12 @@ router.get("/", passportCall("jwt"), async(req, res) => {
         res.status(200).render("index", {
             title: "Productos",
             products: products,
-            session: req.session?.user
+            session: req.user
         });
     } catch(error) {
         return res.status(400).render("index", {
             title: "Productos",
-            session: req.session?.user,
+            session: req.user,
             errorMessage: error.message
         });
     }
@@ -31,12 +31,12 @@ router.get("/realtimeproducts", passportCall("jwt"), async(req, res) => {
         res.status(200).render("realTimeProducts", {
             title: "Productos en tiempo real",
             products: products,
-            session: req.session?.user
+            session: req.user
         });
     } catch(error) {
         return res.status(400).render("index", {
             title: "Productos en tiempo real",
-            session: req.session?.user,
+            session: req.user,
             errorMessage: error.message
         });
     }
@@ -79,7 +79,7 @@ router.get("/products", passportCall("jwt"), async(req, res) => {
         res.status(200).render("products", {
             title: "Productos",
             products: products,
-            user: req.session?.user,
+            user: req.user,
             hasPrevPage,
             hasNextPage,
             prevPage,
@@ -89,7 +89,7 @@ router.get("/products", passportCall("jwt"), async(req, res) => {
     } catch(error) {
         return res.status(400).render("products", {
             title: "Productos",
-            user: req.session?.user,
+            user: req.user,
             errorMessage: error.message
         });
     }

@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
 import { config } from '../config/config.js';
 
-const JWT_SECERET_KEY = config.JWT_SECERET_KEY;
+const JWT_SECRET_KEY = config.JWT_SECRET_KEY;
 
 const genertateToken = (user) => {
-    return jwt.sign(user, JWT_SECERET_KEY, {expiresIn: '24h'});
+    return jwt.sign(user, JWT_SECRET_KEY, {expiresIn: '24h'});
 }
 
 const authTokenMiddleware = (req, res, next) => {

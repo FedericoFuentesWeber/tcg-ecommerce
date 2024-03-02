@@ -9,7 +9,6 @@ const CLIENT_ID = config.CLIENT_ID;
 const CLIENT_SECRET = config.CLIENT_SECRET;
 const CALLBACK_URL = config.CALLBACK_URL;
 const JWT_SECRET_KEY = config.JWT_SECRET_KEY;
-console.log("jwt", JWT_SECRET_KEY);
 
 const userManager = new UserManagerDB();
 const JWTStrategy  = passportJWT.Strategy;
