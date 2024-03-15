@@ -1,24 +1,12 @@
 import { Router } from "express";
-import { MessageManagerDB } from "../daos/DBManagers/MessageManager/MessageManagerDB.js";
+import { ChatController } from "../controllers/chat.controller.js";
 
 const router = Router();
 
-const MessageManager = new MessageManagerDB();
+const {
+    getMessages
+} = new ChatController();
 
-router.get("/", async (req, res) => {
-    try {
-        const messages = await MessageManager.getMessages();
-
-        res.status(200).render("chat", {
-            title: "Mensajes",
-            messages: messages
-        });
-    } catch(error) {
-        return res.status(400).render("chat", {
-            title: "Mensajes",
-            errorMessage: error.message
-        });
-    }
-});
+router.get("/", getMessages);
 
 export default router;
