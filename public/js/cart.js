@@ -69,3 +69,39 @@ const deleteAllProductsFrom = (cartId) => {
         }
     });
 };
+
+const purchase = (cartId) => {
+    Swal.fire({
+        title: "Desea finalizar la compra?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Finalizar",
+        cancelButtonText: "Cancelar",
+        preConfirm: async() => {
+            try {
+                const response = await fetch(
+                    `/api/carts/${cartId}/purchase`,
+                    {
+                        method: "PUT"
+                    }
+                );
+                console.log("response", response);
+                if(!response.ok) {
+                    throw new Error("Error al intentar finalizar la compra");
+                }
+                Swal.fire({
+                    title: "La compra finalizo correctamente",
+                    icon: "success",
+                    timer: 1000
+                }).then(function () {
+                    window.location.href = `/carts/${cartId}`;
+                });
+            } catch(error) {
+                Swal.showValidationMessage(
+                    `<i class="fa fa-info-circle"></i> ${error}`
+                );
+                console.log(error);
+            }
+        }
+    });
+};

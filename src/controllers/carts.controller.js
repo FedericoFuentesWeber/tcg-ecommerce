@@ -1,7 +1,9 @@
+import { CartManagerDB } from "../daos/DBManagers/CartManager/CartManagerDB.js";
 import { cartService } from "../repositories/index.js";
 
 class CartsController {
     constructor() {
+        this.cartManager = new CartManagerDB();
         this.service = cartService;
     }
 
@@ -111,6 +113,25 @@ class CartsController {
                 description: `Se actualizo correctamente la cantidad del producto con ID ${pid} en el carrito con ID ${cid}`
             });
         } catch(error) {
+            return res.status(400).send({
+                status: "failed",
+                description: error.message
+            });
+        }
+    };
+
+    finalizePurchase = async(req, res) => {
+        try {
+            const { cid } = req.params;
+
+            await this.service.finalizePurchase(cid);
+
+            return res.status(200).send({
+                status: "success",
+                description: `La compra del carrito con ID ${cid} fue finalizada correctamente`
+            });
+
+        } catch (error) {
             return res.status(400).send({
                 status: "failed",
                 description: error.message

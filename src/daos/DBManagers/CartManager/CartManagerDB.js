@@ -18,14 +18,9 @@ export class CartManagerDB {
         }
     };
 
-    addCart = async(/*products*/) => {
+    addCart = async() => {
         try {
-
-            // if (!products || products.length === 0) {
-            //     throw new Error("No hay ningún producto en el carrito.");
-            // }
-
-            const newCart = await this.createNewCart([]/*products*/);
+            const newCart = await this.createNewCart([]);
             return cartModel.create(newCart);
         } catch(error) {
             throw error;
@@ -273,4 +268,28 @@ export class CartManagerDB {
             throw error;
         }
     };
+
+    buyCartProducts = async(cid) => {
+        try {
+            const products = await this.getProducts(cid);
+            const totalAmount = 0;
+            if (!products || products.length === 0) {
+                throw new Error("No hay ningún producto en el carrito.");
+            }
+
+            products.forEach((product) => {
+                const stockPrePurchase = productManager.stockAvailable(product.product._id);
+                productManager.buyProduct(product.product._id, product.quantity);
+                const stockPostPurchase = productManager.stockAvailable(product.product._id);
+
+                if(stockPostPurchase < stockPrePurchase) {
+                    this.deleteProductFrom(product.product._id, cid);
+                    totalAmount = totalAmount + (product.product.price * product.quantity);
+                }
+            })
+
+        } catch (error) {
+            throw error;
+        }
+    }    
 }

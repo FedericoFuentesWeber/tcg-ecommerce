@@ -5,6 +5,7 @@ import __dirname from "../../utils.js";
 
 const GMAIL_USER = config.GMAIL_USER;
 const GMAIL_PASS = config.GMAIL_PASS;
+const GMAIL_RECEIVER = 'ffuentesweber@gmail.com';
 
 const router = Router();
 const transport = nodemailer.createTransport({
@@ -20,7 +21,7 @@ router.get('/mail', async(req, res) => {
     try {
         let result = await transport.sendMail({
                 from: `Coder Tests <${GMAIL_USER}>`,
-                to: 'ffuentesweber@gmail.com',
+                to: GMAIL_RECEIVER,
                 subject: 'Correo de prueba coder',
                 html: `<div><h1>Estó es un test</h1></div>`,
                 attachments: [{
