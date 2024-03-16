@@ -1,14 +1,16 @@
 import { CartManagerDB } from "../daos/DBManagers/CartManager/CartManagerDB.js"
+import { cartService } from "../repositories/index.js";
 
 class CartViewController {
     constructor() {
         this.cartManager = new CartManagerDB();
+        this.service = cartService;
     }
 
     getCart = async(req, res) => {
         try {
             const { cid } = req.params;
-            const { products } = await this.cartManager.getCartById(cid);
+            const { products } = await this.service.getCart(cid);
     
             res.status(200).render("cart", {
                 title: "Carrito",

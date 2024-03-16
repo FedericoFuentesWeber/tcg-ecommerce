@@ -1,13 +1,13 @@
-import { ProductManagerDB } from "../daos/DBManagers/ProductManager/ProductManagerDB.js"
+import { productService } from "../repositories/index.js";
 
 class ProductsViewController {
     constructor() {
-        this.productManager = new ProductManagerDB();
+        this.service = productService;
     }
 
     getProducts = async(req, res) => {
         try {
-            const products = await this.productManager.getProducts();
+            const products = await this.service.getAllProducts();
     
             res.status(200).render("index", {
                 title: "Productos",
@@ -25,7 +25,7 @@ class ProductsViewController {
 
     getRealTimeProducts = async(req, res) => {
         try {
-            const products = await this.productManager.getProducts();
+            const products = await this.service.getAllProducts();
             res.status(200).render("realTimeProducts", {
                 title: "Productos en tiempo real",
                 products: products,
@@ -71,9 +71,9 @@ class ProductsViewController {
                 prevPage,
                 nextPage,
                 page
-            } = await this.productManager.filteredProductsBy(querySearch, queryParams);
+            } = await this.service.getProducts(querySearch, queryParams);
     
-            const products = this.productManager.parseProducts(docs);
+            const products = this.service.parseProducts(docs);
             res.status(200).render("products", {
                 title: "Productos",
                 products: products,
