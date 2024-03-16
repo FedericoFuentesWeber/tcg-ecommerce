@@ -81,11 +81,6 @@ class SessionController {
     };
 
     current = async(req, res) => {
-        //TODO: send a DTO of user
-        // const { user } = req.body;
-        // console.log("usuario actual", user);
-        // const userDto = new UserDto(user);
-        // console.log(userDto);
         res.send({
             message:"Datos sensibles"
         });
