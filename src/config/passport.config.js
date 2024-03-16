@@ -1,7 +1,7 @@
 import passport from 'passport';
 import passportJWT from 'passport-jwt';
 import GithubStrategy from 'passport-github2';
-import userModel from '../models/user.model.js';
+import userModel from '../daos/DBManagers/models/user.model.js';
 import { UserManagerDB } from '../daos/DBManagers/UserManager/UserManagerDB.js';
 import { config } from './config.js';
 

@@ -1,6 +1,6 @@
 import { Cart } from "../../../main/Cart/Cart.js";
 import { mongoose } from "mongoose";
-import cartModel from "../../../models/cart.model.js"
+import cartModel from "..//models/cart.model.js"
 import { ProductManagerDB } from "../ProductManager/ProductManagerDB.js"
 
 const productManager = new ProductManagerDB();

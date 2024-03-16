@@ -1,5 +1,5 @@
 import { User } from "../../../main/User/User.js";
-import userModel from "../../../models/user.model.js";
+import userModel from "../models/user.model.js";
 import mongoose from "mongoose";
 import { CartManagerDB } from "../CartManager/CartManagerDB.js";
 

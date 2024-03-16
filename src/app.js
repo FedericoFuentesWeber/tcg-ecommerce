@@ -3,7 +3,7 @@ import handlebars from 'express-handlebars';
 import __dirname from '../utils.js';
 import { Server as ServerIO } from 'socket.io';
 import { config, connectDB } from "./config/config.js"
-import messageModel from "./models/message.model.js";
+import messageModel from "../src/daos/DBManagers/models/message.model.js";
 import { MessageManagerDB } from "./daos/DBManagers/MessageManager/MessageManagerDB.js";
 import cookieParser from "cookie-parser";
 import passport from 'passport';
