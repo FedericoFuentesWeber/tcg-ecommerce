@@ -1,3 +1,4 @@
+import { UserDto } from "../dtos/userDto.js";
 import { sessionService } from "../repositories/index.js";
 import { createHash, isValidPassword } from "../utils/bcrypt.js";
 import { genertateToken } from "../utils/jsonwebtoken.js";
@@ -78,6 +79,17 @@ class SessionController {
             });
         }
     };
+
+    current = async(req, res) => {
+        //TODO: send a DTO of user
+        // const { user } = req.body;
+        // console.log("usuario actual", user);
+        // const userDto = new UserDto(user);
+        // console.log(userDto);
+        res.send({
+            message:"Datos sensibles"
+        });
+    }
 }
 
 export { SessionController }
