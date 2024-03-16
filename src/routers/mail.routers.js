@@ -1,6 +1,7 @@
 import { Router } from "express";
 import nodemailer from 'nodemailer';
 import { config } from "../config/config.js";
+import __dirname from "../../utils.js";
 
 const GMAIL_USER = config.GMAIL_USER;
 const GMAIL_PASS = config.GMAIL_PASS;
@@ -22,8 +23,14 @@ router.get('/mail', async(req, res) => {
                 to: 'ffuentesweber@gmail.com',
                 subject: 'Correo de prueba coder',
                 html: `<div><h1>Estó es un test</h1></div>`,
-                attachments: []
-        })
+                attachments: [{
+                    filename: 'dragonair.jpg',
+                    path: __dirname+'/public/images/dragonair.jpg',
+                    cid: 'dragonair'
+                }]
+        });
+
+        res.send('Mail enviado');
     } catch (error) {
         return res.status(400).send({
             status: "failed",
