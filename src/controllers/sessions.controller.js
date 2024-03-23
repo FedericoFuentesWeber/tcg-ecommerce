@@ -81,8 +81,10 @@ class SessionController {
     };
 
     current = async(req, res) => {
+        const user = await this.service.login(req.user.email);
         res.send({
-            message:"Datos sensibles"
+            status: "success",
+            payload: new UserDto(user)
         });
     }
 }
