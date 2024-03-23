@@ -273,7 +273,7 @@ export class CartManagerDB {
     buyCartProducts = async(cid, purchaser) => {
         try {
             const products = await this.getProducts(cid);
-            let totalAmount = 0;
+            let boughtProducts = [];
             if (!products || products.length === 0) {
                 throw new Error("No hay ningún producto en el carrito.");
             }
@@ -282,13 +282,27 @@ export class CartManagerDB {
                 if(item.product.stock >= item.quantity) {
                     productManager.buyProduct(item.product._id, item.quantity);
                     this.deleteProductFrom(item.product._id, cid);
-                    totalAmount = totalAmount + (item.product.price * item.quantity);
+                    boughtProducts.push(item);
                 }
             });
 
-            if(totalAmount !== 0) {
-                const ticket = await ticketManager.addTicket(totalAmount, purchaser);
-                console.log("ticket", ticket);
+            if(boughtProducts.length) {
+                const ticket = await ticketManager.addTicket(boughtProducts, purchaser);
+
+                let response = {
+                    ticket: ticket,
+                    allItemsBought: false
+                }
+
+                if(products.length === boughtProducts.length) {
+                    response.allItemsBought = true;
+                }
+
+                return response;
+            } else {
+                return {
+                    allItemsBought: false
+                }
             }
 
         } catch (error) {

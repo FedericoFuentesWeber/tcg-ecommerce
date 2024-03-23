@@ -31,14 +31,19 @@ export class TicketManagerDB {
         return code;
     }
 
-    addTicket = async(amount, purchaser) => {
+    addTicket = async(products, purchaser) => {
+        let amount = 0;
         try {
             if(
-                !amount ||
+                !products ||
                 !purchaser 
             ) {
                 throw new Error("Hay parámetros sin completar.")
             }
+
+            products.forEach((item) => {
+                amount += item.product.price * item.quantity;
+            })
 
             const newTicket = await this.createNewTicket({amount, purchaser});
 

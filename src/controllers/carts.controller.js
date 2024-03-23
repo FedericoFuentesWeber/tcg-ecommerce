@@ -125,11 +125,13 @@ class CartsController {
             const { cid } = req.params;
             const purchaser = req.user.email;
 
-            await this.service.finalizePurchase(cid, purchaser);
+            const purchase = await this.service.finalizePurchase(cid, purchaser);
+
 
             return res.status(200).send({
                 status: "success",
-                description: `La compra del carrito con ID ${cid} fue finalizada correctamente`
+                payload: `La compra del carrito con ID ${cid} fue finalizada correctamente`,
+                purchase: purchase
             });
 
         } catch (error) {
