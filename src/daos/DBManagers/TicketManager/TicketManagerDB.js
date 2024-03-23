@@ -9,7 +9,7 @@ export class TicketManagerDB {
     }) => {
         return new Ticket({
             id: null,
-            code: this.generateUniqueCode(),
+            code: await this.generateUniqueCode(),
             purchase_datetime: new Date(),
             amount,
             purchaser
@@ -30,32 +30,19 @@ export class TicketManagerDB {
         
         return code;
     }
-    
-    // assertCodeIsNotUsed = async(aCode) => {
-    //     try {
-    //         const codeId = (aTicket) => aTicket.code === aCode;
-    //         let tickets = await this.getTickets();
-    //         if(tickets.some(codeId)) {
-    //             throw new Error(`El ticket con código ${aCode} ya existe.`);
-    //         }
-    //     } catch(error) {
-    //         throw error;
-    //     }
-    // };
 
-    addTicket = async(ticket) => {
+    addTicket = async(amount, purchaser) => {
         try {
             if(
-                !ticket.amount ||
-                !ticket.purchaser 
+                !amount ||
+                !purchaser 
             ) {
                 throw new Error("Hay parámetros sin completar.")
             }
 
-            // await this.assertCodeIsNotUsed(ticket.code);
-            const newTicket = await this.createNewTicket(ticket);
+            const newTicket = await this.createNewTicket({amount, purchaser});
 
-            ticketModel.create(newTicket);
+            return ticketModel.create(newTicket);
         } catch(error) {
             console.error(error.message);
         }

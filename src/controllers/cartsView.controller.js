@@ -14,14 +14,14 @@ class CartViewController {
     
             res.status(200).render("cart", {
                 title: "Carrito",
-                session: req.user,
+                user: req.user,
                 cartId: cid,
                 products: products,
             });
         } catch(error) {
             res.status(400).render("cart", {
                 title: "Carrito",
-                session: req.user,
+                user: req.user,
                 errorMessage: error.message
             });
         }

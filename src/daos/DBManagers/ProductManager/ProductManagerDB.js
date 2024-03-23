@@ -142,16 +142,6 @@ export class ProductManagerDB {
         return parsedProducts;
     }
 
-    stockAvailable = async(pid) => {
-        try {
-            const product = await this.getProductById(pid);
-
-            return product.stock;
-        } catch (error) {
-            console.error(error.message);
-        }
-    }
-
     buyProduct = async(pid, quantity) => {
         try {
             const product = await this.getProductById(pid);

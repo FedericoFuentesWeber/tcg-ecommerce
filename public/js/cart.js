@@ -82,10 +82,10 @@ const purchase = (cartId) => {
                 const response = await fetch(
                     `/api/carts/${cartId}/purchase`,
                     {
-                        method: "PUT"
+                        method: "POST"
                     }
                 );
-                console.log("response", response);
+                
                 if(!response.ok) {
                     throw new Error("Error al intentar finalizar la compra");
                 }
@@ -94,7 +94,7 @@ const purchase = (cartId) => {
                     icon: "success",
                     timer: 1000
                 }).then(function () {
-                    window.location.href = `/carts/${cartId}`;
+                    location.reload();
                 });
             } catch(error) {
                 Swal.showValidationMessage(

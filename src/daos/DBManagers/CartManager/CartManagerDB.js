@@ -2,8 +2,10 @@ import { Cart } from "../../../main/Cart/Cart.js";
 import { mongoose } from "mongoose";
 import cartModel from "..//models/cart.model.js"
 import { ProductManagerDB } from "../ProductManager/ProductManagerDB.js"
+import { TicketManagerDB } from "../TicketManager/TicketManagerDB.js";
 
 const productManager = new ProductManagerDB();
+const ticketManager = new TicketManagerDB();
 
 export class CartManagerDB {
 
@@ -141,8 +143,7 @@ export class CartManagerDB {
                     `El ID ${cartId} no es valido.`
                 )
             }
-
-            const cart = await cartModel.findById(cartId);
+            const cart = await cartModel.findById({ _id: cartId });
             if(!cart) {
                 throw new Error(`El carrito con el id ${cartId} no se encuentra en la lista.`)
             }
@@ -269,27 +270,29 @@ export class CartManagerDB {
         }
     };
 
-    buyCartProducts = async(cid) => {
+    buyCartProducts = async(cid, purchaser) => {
         try {
             const products = await this.getProducts(cid);
-            const totalAmount = 0;
+            let totalAmount = 0;
             if (!products || products.length === 0) {
                 throw new Error("No hay ningún producto en el carrito.");
             }
 
-            products.forEach((product) => {
-                const stockPrePurchase = productManager.stockAvailable(product.product._id);
-                productManager.buyProduct(product.product._id, product.quantity);
-                const stockPostPurchase = productManager.stockAvailable(product.product._id);
-
-                if(stockPostPurchase < stockPrePurchase) {
-                    this.deleteProductFrom(product.product._id, cid);
-                    totalAmount = totalAmount + (product.product.price * product.quantity);
+            products.forEach((item) => {
+                if(item.product.stock >= item.quantity) {
+                    productManager.buyProduct(item.product._id, item.quantity);
+                    this.deleteProductFrom(item.product._id, cid);
+                    totalAmount = totalAmount + (item.product.price * item.quantity);
                 }
-            })
+            });
+
+            if(totalAmount !== 0) {
+                const ticket = await ticketManager.addTicket(totalAmount, purchaser);
+                console.log("ticket", ticket);
+            }
 
         } catch (error) {
             throw error;
         }
-    }    
+    };    
 }

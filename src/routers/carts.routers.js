@@ -23,6 +23,6 @@ router.delete("/:cid/products/:pid", deleteProductFromCart);
 router.delete("/:cid", deleteCart);
 router.put("/:cid/products/:pid", updateProductFromCart);
 router.put("/:cid", updateCart);
-router.put("/:cid/purchase", finalizePurchase);
+router.post("/:cid/purchase", passportCall("jwt"), authorization("USER"), finalizePurchase);
 
 export default router;

@@ -123,8 +123,9 @@ class CartsController {
     finalizePurchase = async(req, res) => {
         try {
             const { cid } = req.params;
+            const purchaser = req.user.email;
 
-            await this.service.finalizePurchase(cid);
+            await this.service.finalizePurchase(cid, purchaser);
 
             return res.status(200).send({
                 status: "success",
