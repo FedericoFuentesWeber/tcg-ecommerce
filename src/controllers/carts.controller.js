@@ -1,15 +1,16 @@
 import { CartManagerDB } from "../daos/DBManagers/CartManager/CartManagerDB.js";
+import { cartService } from "../repositories/index.js";
 
 class CartsController {
     constructor() {
         this.cartManager = new CartManagerDB();
+        this.service = cartService;
     }
 
     createCart = async (req, res) => {
         try {
-            const products = req.body;
     
-            const { _id: id } = await this.cartManager.addCart(products);
+            const { _id: id } = await this.service.createCart();
     
             return res.status(201).send({ 
                 status: "success", 
@@ -24,7 +25,7 @@ class CartsController {
     deleteCart = async(req, res) => {
         try {
             const { cid } = req.params;
-            await this.cartManager.deleteAllProductsFrom(cid);
+            await this.service.deleteCart(cid);
     
             return res.status(200).send({
                 status: "success",
@@ -41,7 +42,7 @@ class CartsController {
     getCart = async(req, res) => {
         try {
             const { cid } = req.params;
-            const cart = await this.cartManager.getCartById(cid);
+            const cart = await this.service.getCart(cid);
     
             return res.status(200).send({ status: "success", description: cart.products});
     
@@ -55,7 +56,7 @@ class CartsController {
             const { cid } = req.params;
             const products = req.body;
     
-            await this.cartManager.updateCartWith(cid, products);
+            await this.service.updateCart(cid, products);
     
             return res.status(200).send({
                 status: "success",
@@ -72,7 +73,7 @@ class CartsController {
     addProductToCart = async(req, res) => {
         try {
             const { cid, pid } = req.params;
-            await this.cartManager.addProduct(cid, pid);
+            await this.service.addProductToCart(cid, pid);
     
             return res.status(201).send({ 
                 status: "success", 
@@ -86,7 +87,7 @@ class CartsController {
     deleteProductFromCart = async(req, res) => {
         try {
             const { cid, pid } = req.params;
-            await this.cartManager.deleteProductFrom(pid, cid);
+            await this.service.deleteProductFromCart(pid, cid);
     
             return res.status(200).send({
                 status: "success",
@@ -105,13 +106,35 @@ class CartsController {
             const { cid, pid } = req.params;
             const { quantity } = req.body;
     
-            await this.cartManager.updateProductQuantity(cid, pid, quantity);
+            await this.service.updateProductFromCart(cid, pid, quantity);
     
             return res.status(200).send({
                 status: "success",
                 description: `Se actualizo correctamente la cantidad del producto con ID ${pid} en el carrito con ID ${cid}`
             });
         } catch(error) {
+            return res.status(400).send({
+                status: "failed",
+                description: error.message
+            });
+        }
+    };
+
+    finalizePurchase = async(req, res) => {
+        try {
+            const { cid } = req.params;
+            const purchaser = req.user.email;
+
+            const purchase = await this.service.finalizePurchase(cid, purchaser);
+
+
+            return res.status(200).send({
+                status: "success",
+                payload: `La compra del carrito con ID ${cid} fue finalizada correctamente`,
+                purchase: purchase
+            });
+
+        } catch (error) {
             return res.status(400).send({
                 status: "failed",
                 description: error.message

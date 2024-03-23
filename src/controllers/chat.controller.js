@@ -1,13 +1,13 @@
-import { MessageManagerDB } from "../daos/DBManagers/MessageManager/MessageManagerDB.js"
+import { messageService } from "../repositories/index.js";
 
 class ChatController {
     constructor() {
-        this.messageManager = new MessageManagerDB();
+        this.service = messageService;
     }
 
     getMessages = async (req, res) => {
         try {
-            const messages = await this.messageManager.getMessages();
+            const messages = await this.service.getMessages();
     
             res.status(200).render("chat", {
                 title: "Mensajes",

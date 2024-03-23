@@ -9,7 +9,9 @@ const config = {
     JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,
     CLIENT_ID: process.env.CLIENT_ID,
     CLIENT_SECRET: process.env.CLIENT_SECRET,
-    CALLBACK_URL: process.env.CALLBACK_URL
+    CALLBACK_URL: process.env.CALLBACK_URL,
+    GMAIL_USER: process.env.GMAIL_USER,
+    GMAIL_PASS: process.env.GMAIL_PASS
 };
 
 

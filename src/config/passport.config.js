@@ -1,7 +1,7 @@
 import passport from 'passport';
 import passportJWT from 'passport-jwt';
 import GithubStrategy from 'passport-github2';
-import userModel from '../models/user.model.js';
+import userModel from '../daos/DBManagers/models/user.model.js';
 import { UserManagerDB } from '../daos/DBManagers/UserManager/UserManagerDB.js';
 import { config } from './config.js';
 
@@ -42,10 +42,8 @@ const initializePassport = () => {
         clientSecret: CLIENT_SECRET,
         callbackURL: CALLBACK_URL
     }, async(accessToken, refreshToken, profile, done) => {
-        console.log('profile', profile);
         try {
             let foundUser = await userModel.findOne({email: profile._json.email});
-            console.log("user", foundUser);
             if(foundUser === null) {
                 let user = await userManager.addUser({
                     first_name: profile._json.name,

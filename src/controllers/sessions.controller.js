@@ -1,16 +1,17 @@
-import { UserManagerDB } from "../daos/DBManagers/UserManager/UserManagerDB.js";
+import { UserDto } from "../dtos/userDto.js";
+import { sessionService } from "../repositories/index.js";
 import { createHash, isValidPassword } from "../utils/bcrypt.js";
 import { genertateToken } from "../utils/jsonwebtoken.js";
 
 class SessionController {
     constructor() {
-        this.userManager = new UserManagerDB
+        this.service = sessionService;
     }
 
     login = async(req, res) => {
         const { email, password } = req.body;
     
-        const user = await this.userManager.getUserByEmail(email);
+        const user = await this.service.login(email);
     
         if(!isValidPassword(password, user.password)){
             return res.status(401).send({
@@ -39,7 +40,7 @@ class SessionController {
         const { first_name, last_name, age, email, password } = req.body;
     
         try {
-            const result = await this.userManager.addUser({
+            const result = await this.service.register({
                 first_name,
                 last_name,
                 age,
@@ -78,6 +79,14 @@ class SessionController {
             });
         }
     };
+
+    current = async(req, res) => {
+        const user = await this.service.login(req.user.email);
+        res.send({
+            status: "success",
+            payload: new UserDto(user)
+        });
+    }
 }
 
 export { SessionController }

@@ -1,9 +1,9 @@
-import { ProductManagerDB } from "../daos/DBManagers/ProductManager/ProductManagerDB.js";
 import { io } from "../app.js";
+import { productService } from "../repositories/index.js";
 
 class ProductController {
     constructor() {
-        this.productManager = new ProductManagerDB();
+        this.service = productService;
     }
 
     getProducts = async(req, res) => {
@@ -40,11 +40,11 @@ class ProductController {
                 hasNextPage,
                 prevLink,
                 nextLink
-            } = await this.productManager.filteredProductsBy(querySearch, queryParams);
+            } = await this.service.getProducts(querySearch, queryParams);
     
             return res.status(200).send({
                 status: "success",
-                payload: this.productManager.parseProducts(docs),
+                payload: this.service.parseProducts(docs),
                 totalPages,
                 prevPage,
                 nextPage,
@@ -65,7 +65,7 @@ class ProductController {
     getProduct = async(req, res) => {
         try {
             const { pid } = req.params;
-            const foundProduct = await this.productManager.getProductById(pid);
+            const foundProduct = await this.service.getProduct(pid);
     
             return res.status(200).send(foundProduct);
     
@@ -94,8 +94,8 @@ class ProductController {
                 newProduct.thumbnails = images.filter((image) => image !== null);
             }
     
-            await this.productManager.addProduct(newProduct);
-            const updatedProducts = await this.productManager.getProducts();
+            await this.service.createProduct(newProduct);
+            const updatedProducts = await this.service.getAllProducts();
     
             io.emit("updateProductsEvent", updatedProducts);
     
@@ -112,7 +112,7 @@ class ProductController {
         try {
             const { pid } = req.params;
             const updatedProduct = req.body;
-            await this.productManager.updateProduct(pid, updatedProduct);
+            await this.service.updateProduct(pid, updatedProduct);
     
             return res.status(200).send({ 
                 status: "success", 
@@ -126,9 +126,9 @@ class ProductController {
     deleteProduct = async(req, res) => {
         try {
             const { pid } = req.params;
-            await this.productManager.deleteProduct(pid);
+            await this.service.deleteProduct(pid);
     
-            const updatedProducts = await this.productManager.getProducts();
+            const updatedProducts = await this.service.getAllProducts();
     
             io.emit("updateProductsEvent", updatedProducts);
     

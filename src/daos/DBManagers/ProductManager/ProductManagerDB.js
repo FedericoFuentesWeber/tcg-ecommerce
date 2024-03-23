@@ -1,6 +1,6 @@
 import { mongoose } from "mongoose";
 import { Product } from "../../../main/Product/Product.js"
-import productModel from "../../../models/product.model.js";
+import productModel from "../models/product.model.js";
 
 export class ProductManagerDB {
 
@@ -140,5 +140,26 @@ export class ProductManagerDB {
         );
 
         return parsedProducts;
+    }
+
+    buyProduct = async(pid, quantity) => {
+        try {
+            const product = await this.getProductById(pid);
+            if(quantity <= product.stock) {
+                const result = await productModel.updateOne(
+                    { _id: pid },
+                    { $set: { stock: product.stock-quantity } }
+                )
+    
+                if(result.modifiedCount == 0) {
+                    throw new Error(
+                        `Ocurrio un error al momento de actualizar el stock del producto`
+                    );
+                }
+            }
+            
+        } catch (error) {
+            console.error(error.message);
+        }
     }
 }

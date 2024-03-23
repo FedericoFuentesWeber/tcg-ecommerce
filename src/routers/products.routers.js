@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { uploader } from "../../utils.js";
 import { ProductController } from "../controllers/products.controller.js";
+import { authorization } from "../middleware/authorization.middleware.js";
+import { passportCall } from "../middleware/passportCall.middleware.js";
 
 const router = Router();
 const {
@@ -14,8 +16,8 @@ const {
 
 router.get("/", getProducts);
 router.get("/:pid", getProduct);
-router.put("/:pid", updateProduct);
-router.delete("/:pid", deleteProduct);
-router.post("/", uploader.array("thumbnails"), createProduct);
+router.put("/:pid", passportCall("jwt"), authorization("ADMIN"), updateProduct);
+router.delete("/:pid", passportCall("jwt"), authorization("ADMIN"), deleteProduct);
+router.post("/", uploader.array("thumbnails"), passportCall("jwt"), authorization("ADMIN"), createProduct);
 
 export default router;

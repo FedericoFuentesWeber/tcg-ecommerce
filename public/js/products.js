@@ -1,8 +1,6 @@
 let cartId = sessionStorage.getItem("cartId");
 
 const addProduct = (productId, cartId) => {
-    console.log("cartId", cartId);
-    console.log("productId", productId);
     Swal.fire({
         title: "Desea agregar el producto al carrito?",
         icon: "warning",

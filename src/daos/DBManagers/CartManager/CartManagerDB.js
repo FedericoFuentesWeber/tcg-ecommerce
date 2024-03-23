@@ -1,9 +1,11 @@
 import { Cart } from "../../../main/Cart/Cart.js";
 import { mongoose } from "mongoose";
-import cartModel from "../../../models/cart.model.js"
+import cartModel from "..//models/cart.model.js"
 import { ProductManagerDB } from "../ProductManager/ProductManagerDB.js"
+import { TicketManagerDB } from "../TicketManager/TicketManagerDB.js";
 
 const productManager = new ProductManagerDB();
+const ticketManager = new TicketManagerDB();
 
 export class CartManagerDB {
 
@@ -18,14 +20,9 @@ export class CartManagerDB {
         }
     };
 
-    addCart = async(/*products*/) => {
+    addCart = async() => {
         try {
-
-            // if (!products || products.length === 0) {
-            //     throw new Error("No hay ningún producto en el carrito.");
-            // }
-
-            const newCart = await this.createNewCart([]/*products*/);
+            const newCart = await this.createNewCart([]);
             return cartModel.create(newCart);
         } catch(error) {
             throw error;
@@ -146,8 +143,7 @@ export class CartManagerDB {
                     `El ID ${cartId} no es valido.`
                 )
             }
-
-            const cart = await cartModel.findById(cartId);
+            const cart = await cartModel.findById({ _id: cartId });
             if(!cart) {
                 throw new Error(`El carrito con el id ${cartId} no se encuentra en la lista.`)
             }
@@ -273,4 +269,44 @@ export class CartManagerDB {
             throw error;
         }
     };
+
+    buyCartProducts = async(cid, purchaser) => {
+        try {
+            const products = await this.getProducts(cid);
+            let boughtProducts = [];
+            if (!products || products.length === 0) {
+                throw new Error("No hay ningún producto en el carrito.");
+            }
+
+            products.forEach((item) => {
+                if(item.product.stock >= item.quantity) {
+                    productManager.buyProduct(item.product._id, item.quantity);
+                    this.deleteProductFrom(item.product._id, cid);
+                    boughtProducts.push(item);
+                }
+            });
+
+            if(boughtProducts.length) {
+                const ticket = await ticketManager.addTicket(boughtProducts, purchaser);
+
+                let response = {
+                    ticket: ticket,
+                    allItemsBought: false
+                }
+
+                if(products.length === boughtProducts.length) {
+                    response.allItemsBought = true;
+                }
+
+                return response;
+            } else {
+                return {
+                    allItemsBought: false
+                }
+            }
+
+        } catch (error) {
+            throw error;
+        }
+    };    
 }
