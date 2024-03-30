@@ -55,7 +55,6 @@ const login = async() => {
         });
 
         if(!response.ok) {
-            console.log("response not ok");
             const parsedResponse = await response.json();
             throw new Error(parsedResponse.payload);
         }
