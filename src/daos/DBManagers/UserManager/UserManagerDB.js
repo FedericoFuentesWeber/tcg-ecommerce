@@ -2,6 +2,9 @@ import { User } from "../../../main/User/User.js";
 import userModel from "../models/user.model.js";
 import mongoose from "mongoose";
 import { CartManagerDB } from "../CartManager/CartManagerDB.js";
+import CustomError from "../../../utils/errors/CustomError.js";
+import { generateUserErrorInfo } from "../../../utils/errors/info.js";
+import { EErrors } from "../../../utils/errors/enums.js";
 
 const cartManager = new CartManagerDB();
 
@@ -33,7 +36,12 @@ export class UserManagerDB {
                 !user.age ||
                 !user.email
             ) {
-                throw new Error("Hay parámetros sin completar.")
+                CustomError.createError({
+                    name: "User creation failed",
+                    cause: generateUserErrorInfo(user),
+                    message: "Error creating new user",
+                    code: EErrors.INSTANCE_CREATION_ERROR
+                });
             }
 
             const newUser = await this.createNewUser(user);
