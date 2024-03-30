@@ -36,7 +36,7 @@ class SessionController {
         });
     };
 
-    register = async(req, res) => {
+    register = async(req, res, next) => {
         const { first_name, last_name, age, email, password } = req.body;
     
         try {
@@ -60,7 +60,7 @@ class SessionController {
                 usersCreate: result
             });    
         } catch (error) {
-            throw error;
+            next(error);
         }
         
     };
