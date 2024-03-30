@@ -1,6 +1,9 @@
 import { mongoose } from "mongoose";
 import { Product } from "../../../main/Product/Product.js"
 import productModel from "../models/product.model.js";
+import CustomError from "../../../utils/errors/CustomError.js";
+import { generateProductErrorInfo, objectAlreadyIncludedErrorInfo } from "../../../utils/errors/info.js";
+import { EErrors } from "../../../utils/errors/enums.js";
 
 export class ProductManagerDB {
 
@@ -32,7 +35,13 @@ export class ProductManagerDB {
             const codeId = (aProduct) => aProduct.code === aCode;
             let products = await this.getProducts();
             if(products.some(codeId)) {
-                throw new Error(`El producto con código ${aCode} ya existe.`);
+                // throw new Error(`El producto con código ${aCode} ya existe.`);
+                CustomError.createError({
+                    name: "Object already included",
+                    cause: objectAlreadyIncludedErrorInfo(aCode),
+                    message: `El producto con código ${aCode} ya existe.`,
+                    code: EErrors.OBJECT_INCLUDED_ERROR
+                });
             }
         } catch(error) {
             throw error;
@@ -49,7 +58,13 @@ export class ProductManagerDB {
                 !product.price ||
                 !product.stock 
             ) {
-                throw new Error("Hay parámetros sin completar.")
+                // throw new Error("Hay parámetros sin completar.")
+                CustomError.createError({
+                    name: "Product creation failure",
+                    cause: generateProductErrorInfo(product),
+                    message: "Error creating new product",
+                    code: EErrors.INSTANCE_CREATION_ERROR 
+                });
             }
 
             await this.assertCodeIsNotUsed(product.code);
@@ -57,7 +72,7 @@ export class ProductManagerDB {
 
             productModel.create(newProduct);
         } catch(error) {
-            console.error(error.message);
+            throw(error);
         }
     }
 
@@ -70,7 +85,7 @@ export class ProductManagerDB {
 
             return parsedProducts;
         } catch(error) {
-            console.error(error.message);
+            throw(error);
         }
     };
 
