@@ -7,6 +7,7 @@ import cartsViewRouter from "./cartsViews.routers.js";
 import sessionsRouter from "./sessions.routers.js";
 import loginViewRouter from "./loginViews.routers.js";
 import mailRouter from "./mail.routers.js";
+import mockingRouter from "./mocking.routers.js"
 // import { LoginViewsRouter } from "./loginViewClass.routers.js";
 // import { ProductsViews } from "./productsViewClass.routers.js";
 // import { ProductRouter } from "./productsClass.routers.js";
@@ -25,6 +26,7 @@ router.use("/api/carts", cartRouter);
 router.use("/chat", chatRouter);
 router.use("/api/sessions", sessionsRouter);
 router.use("/", mailRouter);
+router.use("/mockingproducts", mockingRouter);
 router.get('*', async(req, res) => {
     res.send('NOT FOUND');
 });

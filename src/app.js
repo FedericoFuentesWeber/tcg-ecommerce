@@ -10,6 +10,7 @@ import passport from 'passport';
 import initializePassport from "./config/passport.config.js";
 import { ProductsViews } from "./routers/productsViewClass.routers.js";
 import appRouter from "./routers/index.js";
+import { errorHandler } from "./middleware/errors/index.js";
 
 const messageManager = new MessageManagerDB();
 const productsViews = new ProductsViews();
@@ -41,6 +42,7 @@ app.set('view engine', 'hbs');
 app.set('views', __dirname+'/views');
 
 app.use(appRouter);
+app.use(errorHandler);
 
 const httpServer = app.listen(PORT, () => {
     console.log(`Escuchando en el puerto ${PORT}`)
