@@ -11,6 +11,7 @@ import initializePassport from "./config/passport.config.js";
 import { ProductsViews } from "./routers/productsViewClass.routers.js";
 import appRouter from "./routers/index.js";
 import { errorHandler } from "./middleware/errors/index.js";
+import { addLogger } from "./utils/logger.js";
 
 const messageManager = new MessageManagerDB();
 const productsViews = new ProductsViews();
@@ -41,6 +42,7 @@ app.engine('hbs', handlebars.engine({
 app.set('view engine', 'hbs');
 app.set('views', __dirname+'/views');
 
+app.use(addLogger);
 app.use(appRouter);
 app.use(errorHandler);
 

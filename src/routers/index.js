@@ -8,6 +8,7 @@ import sessionsRouter from "./sessions.routers.js";
 import loginViewRouter from "./loginViews.routers.js";
 import mailRouter from "./mail.routers.js";
 import mockingRouter from "./mocking.routers.js"
+import { devLogger } from "../utils/logger.js";
 // import { LoginViewsRouter } from "./loginViewClass.routers.js";
 // import { ProductsViews } from "./productsViewClass.routers.js";
 // import { ProductRouter } from "./productsClass.routers.js";
@@ -27,6 +28,15 @@ router.use("/chat", chatRouter);
 router.use("/api/sessions", sessionsRouter);
 router.use("/", mailRouter);
 router.use("/mockingproducts", mockingRouter);
+router.use("/loggerTest", async (req, res) => {
+    devLogger.fatal("Fatal error");
+    devLogger.error("Error");
+    devLogger.warning("Warning");
+    devLogger.info("Info");
+    devLogger.debug("Debug");
+
+    res.send("logger");
+})
 router.get('*', async(req, res) => {
     res.send('NOT FOUND');
 });

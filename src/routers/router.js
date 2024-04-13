@@ -41,10 +41,7 @@ class RouterClass {
 
     handlePolicies = policies => (req, res, next) => {
         if(policies[0] === 'PUBLIC') next();
-        //Por alguna razón el header the authorization no esta por lo que tengo que usar el de cookie
-        console.log(req.headers)
         const authHeaders = req.headers.authorization;
-        // const authHeaders = req.headers.cookie;
         const token = authHeaders.split('=')[1];
         let user = jwt.verify(token, JWT_SECRET_KEY);
 
