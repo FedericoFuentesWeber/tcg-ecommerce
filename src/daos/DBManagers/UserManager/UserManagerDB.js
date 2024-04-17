@@ -129,6 +129,30 @@ export class UserManagerDB {
         }
     }
 
+    changeRoleFor = async(user, newRole) => {
+        try {
+            await userModel.findByIdAndUpdate(
+                user._id,
+                { role: newRole}
+            );
+        } catch (error) {
+            console.error(error.message);
+            return null
+        }
+    }
+
+    changePasswordFor = async(user, newPassword) => {
+        try {
+            await userModel.findByIdAndUpdate(
+                user._id,
+                { password: newPassword }
+            );
+        } catch (error) {
+            console.error(error.message);
+            return null;   
+        }
+    }
+
     deleteUser = async(userId) => {
         try {
             const userToDelete = await this.getUserById(userId);

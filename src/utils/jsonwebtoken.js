@@ -4,7 +4,11 @@ import { config } from '../config/config.js';
 const JWT_SECRET_KEY = config.JWT_SECRET_KEY;
 
 const genertateToken = (user) => {
-    return jwt.sign(user, JWT_SECRET_KEY, {expiresIn: '24h'});
+    generateTokenWith(user, '24h');
+}
+
+const generateTokenWith = (user, time) => {
+    return jwt.sign(user, JWT_SECRET_KEY, {expiresIn: time});
 }
 
 const authTokenMiddleware = (req, res, next) => {
@@ -14,7 +18,7 @@ const authTokenMiddleware = (req, res, next) => {
 
     const token = authHeader.split(' ')[1]
 
-    jwt.verify(token, JWT_SECERET_KEY, (error, decodeUser) => {
+    jwt.verify(token, JWT_SECRET_KEY, (error, decodeUser) => {
         if(error) return res.status(400).send({status: 'error', message: 'not authorized'})
 
         req.user = decodeUser;
@@ -22,4 +26,4 @@ const authTokenMiddleware = (req, res, next) => {
     });
 }
 
-export {genertateToken, authTokenMiddleware}
+export {genertateToken, generateTokenWith, authTokenMiddleware}

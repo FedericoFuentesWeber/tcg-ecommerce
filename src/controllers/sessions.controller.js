@@ -1,7 +1,9 @@
 import { UserDto } from "../dtos/userDto.js";
 import { sessionService } from "../repositories/index.js";
 import { createHash, isValidPassword } from "../utils/bcrypt.js";
-import { genertateToken } from "../utils/jsonwebtoken.js";
+import { sendEmail } from "../utils/email.js";
+import { genertateToken, generateTokenWith } from "../utils/jsonwebtoken.js";
+import { createEmailWith } from "../utils/passwordRecoveryEmail.js";
 
 class SessionController {
     constructor() {
@@ -11,7 +13,7 @@ class SessionController {
     login = async(req, res) => {
         const { email, password } = req.body;
     
-        const user = await this.service.login(email);
+        const user = await this.service.getUserByEmail(email);
     
         if(!isValidPassword(password, user.password)){
             return res.status(401).send({
@@ -81,11 +83,65 @@ class SessionController {
     };
 
     current = async(req, res) => {
-        const user = await this.service.login(req.user.email);
+        const user = await this.service.getUserByEmail(req.user.email);
         res.send({
             status: "success",
             payload: new UserDto(user)
         });
+    }
+
+    recoverPassword = async(req, res, next) => {
+        const { email } = req.body;
+
+        try {
+            const user = await this.service.getUserByEmail(email);
+            const token = generateTokenWith(
+                {
+                    id: user._id,
+                    email: user.email
+                },
+                '1h'
+            );
+
+            const emailBody = createEmailWith(token);
+
+            sendEmail(
+                email,
+                "Solicitud de cambio de contraseña - TCG", 
+                emailBody
+            );
+
+            return res.status(200).send({
+                status: "success",
+                payload: "Recover password email sent"
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    changePassword = async(req, res, next) => {
+        const { email, password } = req.body;
+
+        try {
+            const user = await this.service.getUserByEmail(email);
+
+            if(isValidPassword(password, user.password)) {
+                return res.status(401).send({
+                    status: "failed",
+                    payload: "New password can't be the same as the last one"
+                });
+            }
+
+            await this.service.changePasswordFor(user, createHash(password));
+
+            return res.status(200).send({
+                status: "success",
+                payload: "Password changed"
+            })
+        } catch (error) {
+            next(error);
+        }
     }
 }
 
