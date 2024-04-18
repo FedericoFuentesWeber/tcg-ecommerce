@@ -1,6 +1,6 @@
 const socket = io();
 
-const addNewProduct = () => {
+const addNewProduct = (userId) => {
     Swal.fire({
         title: "Agregar nuevo producto",
         html: 
@@ -39,8 +39,9 @@ const addNewProduct = () => {
         confirmButtonText: "Agregar",
         preConfirm: async () => {
             const formData = new FormData(document.getElementById("productForm"));
+            formData.append("owner", userId);
             try {
-                const response = await fetch("/api/products/", {
+                const response = await fetch("/api/products", {
                     method: "POST",
                     body: formData
                 });

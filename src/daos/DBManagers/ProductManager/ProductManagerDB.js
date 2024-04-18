@@ -15,7 +15,7 @@ export class ProductManagerDB {
         price,
         stock,
         thumbnails,
-        // owner
+        owner
     }) => {
             return new Product({
                 id: null,
@@ -27,7 +27,7 @@ export class ProductManagerDB {
                 status: true,
                 stock,
                 thumbnails,
-                // owner: owner ? owner : null
+                owner: owner ? owner : null
             })
         
     }

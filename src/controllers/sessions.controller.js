@@ -26,7 +26,8 @@ class SessionController {
             fullname: `${user.first_name} ${user.last_name}`,
             role: user.role,
             email: user.email,
-            cartId: user.cartId._id
+            cartId: user.cartId._id,
+            id: user._id
         });
         res.status(200).cookie('cookieToken', token, {
             maxAge: 60*60*1000*24,

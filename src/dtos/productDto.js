@@ -7,6 +7,7 @@ class ProductDto {
         this.price = product.price;
         this.stock = product.stock;
         this.thumbnails = product.thumbnails;
+        this.owner = product.owner;
     }
 }
 
