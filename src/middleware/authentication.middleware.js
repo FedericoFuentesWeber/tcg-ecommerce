@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
 import { UserManagerDB } from "../daos/DBManagers/UserManager/UserManagerDB.js";
+import { config } from "../config/config.js";
 
 const userManager = new UserManagerDB();
 
-const ADMIN_MAIL = "adminCoder@coder.com";
-const ADMIN_PASSWORD = "adminCod3r123";
-const ADMIN_ROLE = "ADMIN"
+const ADMIN_MAIL = config.ADMIN_MAIL;
+const ADMIN_PASSWORD = config.ADMIN_PASSWORD;
+const ADMIN_ROLE = config.ADMIN_ROLE;
 
 async function auth (req, res, next) {
     try {

@@ -28,7 +28,6 @@ class SessionController {
             email: user.email,
             cartId: user.cartId._id
         });
-    
         res.status(200).cookie('cookieToken', token, {
             maxAge: 60*60*1000*24,
             httpOnly: true
@@ -40,7 +39,6 @@ class SessionController {
 
     register = async(req, res, next) => {
         const { first_name, last_name, age, email, password } = req.body;
-    
         try {
             const result = await this.service.register({
                 first_name,
@@ -88,7 +86,7 @@ class SessionController {
             status: "success",
             payload: new UserDto(user)
         });
-    }
+    };
 
     recoverPassword = async(req, res, next) => {
         const { email } = req.body;
@@ -118,7 +116,7 @@ class SessionController {
         } catch (error) {
             next(error);
         }
-    }
+    };
 
     changePassword = async(req, res, next) => {
         const { email, password } = req.body;
@@ -142,7 +140,7 @@ class SessionController {
         } catch (error) {
             next(error);
         }
-    }
+    };
 }
 
 export { SessionController }

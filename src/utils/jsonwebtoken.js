@@ -4,7 +4,7 @@ import { config } from '../config/config.js';
 const JWT_SECRET_KEY = config.JWT_SECRET_KEY;
 
 const genertateToken = (user) => {
-    generateTokenWith(user, '24h');
+    return jwt.sign(user, JWT_SECRET_KEY, {expiresIn: '24h'});
 }
 
 const generateTokenWith = (user, time) => {

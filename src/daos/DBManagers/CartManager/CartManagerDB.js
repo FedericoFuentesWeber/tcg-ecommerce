@@ -3,6 +3,7 @@ import { mongoose } from "mongoose";
 import cartModel from "..//models/cart.model.js"
 import { ProductManagerDB } from "../ProductManager/ProductManagerDB.js"
 import { TicketManagerDB } from "../TicketManager/TicketManagerDB.js";
+import { config } from "../../../config/config.js";
 
 const productManager = new ProductManagerDB();
 const ticketManager = new TicketManagerDB();
@@ -17,6 +18,19 @@ export class CartManagerDB {
             })
         } catch(error) {
             console.error(error.message);
+        }
+    };
+
+    addAdminCart = async() => {
+        try {
+            const adminCart = new Cart({
+                id: config.ADMIN_ID,
+                products: []
+            });
+
+            return cartModel.create(adminCart);
+        } catch (error) {
+            throw error;
         }
     };
 

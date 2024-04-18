@@ -14,7 +14,8 @@ export class ProductManagerDB {
         category,
         price,
         stock,
-        thumbnails
+        thumbnails,
+        // owner
     }) => {
             return new Product({
                 id: null,
@@ -25,7 +26,8 @@ export class ProductManagerDB {
                 price,
                 status: true,
                 stock,
-                thumbnails
+                thumbnails,
+                // owner: owner ? owner : null
             })
         
     }
@@ -35,7 +37,6 @@ export class ProductManagerDB {
             const codeId = (aProduct) => aProduct.code === aCode;
             let products = await this.getProducts();
             if(products.some(codeId)) {
-                // throw new Error(`El producto con código ${aCode} ya existe.`);
                 CustomError.createError({
                     name: "Object already included",
                     cause: objectAlreadyIncludedErrorInfo(aCode),
@@ -58,7 +59,6 @@ export class ProductManagerDB {
                 !product.price ||
                 !product.stock 
             ) {
-                // throw new Error("Hay parámetros sin completar.")
                 CustomError.createError({
                     name: "Product creation failure",
                     cause: generateProductErrorInfo(product),

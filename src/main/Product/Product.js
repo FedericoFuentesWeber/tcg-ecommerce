@@ -1,5 +1,5 @@
 export class Product {
-    constructor({id, title, description, code, price, status, stock, category, thumbnails}) {
+    constructor({id, title, description, code, price, status, stock, category, thumbnails, owner}) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -9,5 +9,6 @@ export class Product {
         this.stock = stock;
         this.category = category;
         !thumbnails ? (this.thumbnails= []) : (this.thumbnails = thumbnails);
+        this.owner = owner;
     }
 }
