@@ -92,13 +92,33 @@ const deleteProduct = (productId) => {
 };
 
 const updateTable = async (products) => {
+
+    const user = await fetch('/api/sessions/current', {
+        method: 'GET'
+    });
+
+    const userJson = await user.json();
+    const userDetails = userJson.payload;
+
     let productsTableBody = document.getElementById("products_body");
     let content = ``;
+    let deleteProductButton = ``;
 
     if(!products || products === 0) {
         content += `<tr><td colspan="7">No hay productos</td></tr>`
     } else {
         products.forEach((product) => {
+            if(
+                userDetails.role === "ADMIN" ||
+                userDetails.role === "PREMIUM" && userDetails.id === product.owner
+            ) {
+                deleteProductButton = `
+                <td class="px-4">
+                    <a onclick="deleteProduct('${product.id}')" class="btn-sm clickable">
+                        Borrar
+                    </a>
+                </td>`
+            }
             content += `
                 <tr>
                     <td>${product.title}</td>
@@ -112,11 +132,7 @@ const updateTable = async (products) => {
                             Imagen
                         </a>
                     </td>
-                    <td class="px-4">
-                        <a onclick="deleteProduct('${product.id}')" class="btn-sm clickable">
-                            Borrar
-                        </a>
-                    </td>
+                    ${deleteProductButton}
                 </tr>`;
         });
     }
