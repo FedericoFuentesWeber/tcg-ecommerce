@@ -1,0 +1,71 @@
+paths:
+  /api/carts/{cid}:
+    get:
+      summary: "Se obtiene un solo carrito a partir de su Id"
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: "Id del carrito que se desea solicitar"
+        schema:
+          $type: String
+      responses:
+        "200":
+          description: "Carrito encontrado"
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Cart'
+    put:
+      summary: "Actualiza el carrito a partir de su Id"
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: "Id del carrito que se desea solicitar"
+        schema:
+          $type: String
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/updateCart'
+
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: "Id autogenerado de mongo"
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                type: ObjectId
+                description: "Id del producto del carrito"
+              quantity:
+                type: Number
+                description: "Cantidad del producto asociado"
+          description: "Productos del carrito"
+      example:
+        _id: ObjetId('66207bf320000b22c651bf88')
+        products: []
+  requestBodies:
+    updateCart:
+      type: object
+      properties:
+        products:
+          type: Array
+          description: "Productos del carrito"
+      example:
+        products: []

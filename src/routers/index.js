@@ -8,6 +8,7 @@ import sessionsRouter from "./sessions.routers.js";
 import loginViewRouter from "./loginViews.routers.js";
 import mailRouter from "./mail.routers.js";
 import mockingRouter from "./mocking.routers.js"
+import usersRouter from "./users.routers.js";
 import { devLogger } from "../utils/logger.js";
 // import { LoginViewsRouter } from "./loginViewClass.routers.js";
 // import { ProductsViews } from "./productsViewClass.routers.js";
@@ -28,6 +29,7 @@ router.use("/chat", chatRouter);
 router.use("/api/sessions", sessionsRouter);
 router.use("/", mailRouter);
 router.use("/mockingproducts", mockingRouter);
+router.use("/api/users", usersRouter);
 router.use("/loggerTest", async (req, res) => {
     devLogger.fatal("Fatal error");
     devLogger.error("Error");
