@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha test/products.test.js",
     "start": "node src/app.js",
     "dev": "node --watch src/app.js"
   },
@@ -35,6 +35,7 @@
     "winston": "^3.13.0"
   },
   "devDependencies": {
+    "chai": "^5.1.0",
     "mocha": "^10.4.0"
   }
 }
