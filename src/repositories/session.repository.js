@@ -5,12 +5,14 @@ class SessionRepository {
         this.manager = userManager;
     }
 
-    login = async(email) => await this.manager.getUserByEmail(email);
+    getUserById = async(userId) => await this.manager.getUserById(userId);
+    getUserByEmail = async(email) => await this.manager.getUserByEmail(email);
     register = async(newUser) => {
-        const newUserDto = new UserDto(newUser);
-        return await this.manager.addUser(newUserDto);
+        // const newUserDto = new UserDto(newUser);
+        return await this.manager.addUser(newUser);
     }
-    logout = async() => {} 
+    logout = async() => {}
+    changePasswordFor = async(user, newPassword) => await this.manager.changePasswordFor(user, newPassword);
 }
 
 export { SessionRepository }

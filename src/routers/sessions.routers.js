@@ -9,7 +9,9 @@ const {
     login,
     register,
     logout,
-    current
+    current,
+    recoverPassword,
+    changePassword
 } = new SessionController();
 
 router.get('/github', passport.authenticate('github', {scope:['user: email']}), async(req, res) => {});
@@ -22,5 +24,7 @@ router.get('/logout', logout);
 router.post('/login', login);
 router.post('/register', register);
 router.get('/current', passportCall('jwt'), authorization("USER"), current);
+router.post('/recoverPassword', recoverPassword);
+router.post('/changePassword', passportCall('jwt'), changePassword);
 
 export default router;

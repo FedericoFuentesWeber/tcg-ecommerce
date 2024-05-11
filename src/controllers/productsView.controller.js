@@ -12,12 +12,12 @@ class ProductsViewController {
             res.status(200).render("index", {
                 title: "Productos",
                 products: products,
-                session: req.user
+                user: req.user
             });
         } catch(error) {
             return res.status(400).render("index", {
                 title: "Productos",
-                session: req.user,
+                user: req.user,
                 errorMessage: error.message
             });
         }
@@ -29,12 +29,12 @@ class ProductsViewController {
             res.status(200).render("realTimeProducts", {
                 title: "Productos en tiempo real",
                 products: products,
-                session: req.user
+                user: req.user
             });
         } catch(error) {
             return res.status(400).render("index", {
                 title: "Productos en tiempo real",
-                session: req.user,
+                user: req.user,
                 errorMessage: error.message
             });
         }

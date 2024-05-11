@@ -77,6 +77,7 @@ class ProductController {
     createProduct = async(req, res) => {
         try {
             const newProduct = req.body;
+            console.log("nuevo producto", newProduct)
             
             if(req.files && req.files.length >0) {
                 const images = req.files.map((file) => {

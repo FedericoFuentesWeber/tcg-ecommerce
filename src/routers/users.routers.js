@@ -5,10 +5,12 @@ const router = Router();
 
 const {
     getAllUsers,
-    getUserById
+    getUserById,
+    changeRole
 } = new UserController();
 
 router.get('/', getAllUsers);
 router.get('/:uid', getUserById);
+router.get('/premium/:uid', changeRole);
 
 export default router;
