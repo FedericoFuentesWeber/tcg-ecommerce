@@ -7,7 +7,8 @@ import cartsViewRouter from "./cartsViews.routers.js";
 import sessionsRouter from "./sessions.routers.js";
 import loginViewRouter from "./loginViews.routers.js";
 import mailRouter from "./mail.routers.js";
-import mockingRouter from "./mocking.routers.js"
+import mockingRouter from "./mocking.routers.js";
+import userRouter from "./users.routers.js";
 import { devLogger } from "../utils/logger.js";
 // import { LoginViewsRouter } from "./loginViewClass.routers.js";
 // import { ProductsViews } from "./productsViewClass.routers.js";
@@ -26,6 +27,7 @@ router.use("/api/products", productRouter);
 router.use("/api/carts", cartRouter);
 router.use("/chat", chatRouter);
 router.use("/api/sessions", sessionsRouter);
+router.use("/api/users", userRouter);
 router.use("/", mailRouter);
 router.use("/mockingproducts", mockingRouter);
 router.use("/loggerTest", async (req, res) => {

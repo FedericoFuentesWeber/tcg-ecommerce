@@ -11,7 +11,11 @@ const config = {
     CLIENT_SECRET: process.env.CLIENT_SECRET,
     CALLBACK_URL: process.env.CALLBACK_URL,
     GMAIL_USER: process.env.GMAIL_USER,
-    GMAIL_PASS: process.env.GMAIL_PASS
+    GMAIL_PASS: process.env.GMAIL_PASS,
+    ADMIN_MAIL: process.env.ADMIN_MAIL,
+    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
+    ADMIN_ROLE: process.env.ADMIN_ROLE,
+    ADMIN_ID: process.env.ADMIN_ID
 };
 
 
