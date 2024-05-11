@@ -5,6 +5,24 @@ class UserController {
         this.service = userService;
     }
 
+    getAllUsers = async(req, res) => {
+        const users = await this.service.getUsers();
+
+        res.send({
+            status:"success",
+            payload: users
+        })
+    }
+
+    getUserById = async(req, res) => {
+        const { uid } = req.params;
+        const user = await this.service.getUserById(uid);
+        res.send({
+            status: "success",
+            payload: user
+        })
+    }
+
     changeRole = async(req, res) => {
         try {
             const { uid } = req.params;
