@@ -21,6 +21,28 @@ class LoginViewController {
             });
         }
     };
+
+    recoverPassword = async(req, res) => {
+        try {
+            res.status(200).render("recoverPassword");
+        } catch (error) {
+            return res.status(400).render("recoverPassword", {
+                title: "Recover Password",
+                errorMessage: error.message
+            })
+        }
+    };
+
+    changePassword = async(req, res) => {
+        try {
+            res.status(200).render("changePassword");
+        } catch (error) {
+            return res.status(400).render("changePassword", {
+                title: "Recover Password",
+                errorMessage: error.message
+            })
+        }
+    };
 }
 
 export { LoginViewController }
