@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { uploader } from "../../utils.js";
+import { storageDestinationFolder } from "../../utils.js";
 import { ProductController } from "../controllers/products.controller.js";
 import { authorization } from "../middleware/authorization.middleware.js";
 import { passportCall } from "../middleware/passportCall.middleware.js";
 
+const uploader = storageDestinationFolder("products");
 const router = Router();
 const {
     getProducts,
