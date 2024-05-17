@@ -182,5 +182,15 @@ export class UserManagerDB {
             throw error;
         }
     }
+
+    updateLastConnection = async(userId) => {
+        try {
+            await userModel.findByIdAndUpdate(userId, {
+                lastConnection: new Date() 
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
     
 }

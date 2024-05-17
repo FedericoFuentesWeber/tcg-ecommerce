@@ -13,6 +13,7 @@ class SessionRepository {
     }
     logout = async() => {}
     changePasswordFor = async(user, newPassword) => await this.manager.changePasswordFor(user, newPassword);
+    updateLastConnection = async(userId) => await this.manager.updateLastConnection(userId);
 }
 
 export { SessionRepository }
