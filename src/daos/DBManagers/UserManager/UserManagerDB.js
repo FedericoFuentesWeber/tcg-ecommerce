@@ -192,5 +192,15 @@ export class UserManagerDB {
             throw error;
         }
     }
+
+    addDocuments = async(userId, documentsToAdd) => {
+        try {
+            await userModel.findByIdAndUpdate(userId, {
+                documents: documentsToAdd
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
     
 }

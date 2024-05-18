@@ -20,4 +20,27 @@ export class User {
         this.documents = documents;
         this.lastConnection = lastConnection;
     }
+
+    allDocumentsRequiredLoaded = () => {
+        const documents = this.documents;
+        const documentsNeeded = [
+            "Identificacion",
+            "Comprobante de domicilio",
+            "Comprobante de estado de cuenta"
+        ];
+
+        const names = documents.map(file => {
+            const { name } = file;
+
+            //This is done because the files extensions are not specified
+            const lastDotIndex = name.lastIndexOf(".");
+            return lastDotIndex === -1 ? name : name.substring(0, lastDotIndex);
+        });
+
+        if(documents.length < 3) return false;
+
+        return names.every((name) => {
+            documentsNeeded.includes(name);
+        });
+    };
 }
