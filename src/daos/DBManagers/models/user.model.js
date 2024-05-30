@@ -10,7 +10,7 @@ const userSchema = new Schema ({
     },
     last_name: {
         type: String,
-         required: true
+        required: true
     },
     email: {
         type: String,
@@ -30,6 +30,19 @@ const userSchema = new Schema ({
     cartId: {
         type: Schema.Types.ObjectId,
         ref: "carts"
+    },
+    documents: {
+        type: [
+            {
+                name: String,
+                reference: String
+            }
+        ],
+        default: []
+    },
+    lastConnection: {
+        type: Date,
+        default: null
     }
 });
 

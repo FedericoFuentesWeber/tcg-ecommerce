@@ -82,12 +82,12 @@ class ProductController {
             if(req.files && req.files.length >0) {
                 const images = req.files.map((file) => {
                     const fullPath = file.path;
-                    const imagesIndex = fullPath.indexOf("images");
+                    const imagesIndex = fullPath.indexOf("products");
                     if(imagesIndex !== -1) {
                         const relativePath = fullPath.substring(imagesIndex -1);
                         return relativePath;
                     } else {
-                        console.log("Images directory not found");
+                        console.log("Products directory not found");
                         return null;
                     }
                 });
