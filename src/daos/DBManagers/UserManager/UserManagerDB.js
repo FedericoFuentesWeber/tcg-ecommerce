@@ -146,11 +146,11 @@ export class UserManagerDB {
         }
     }
 
-    changeRoleFor = async(user, newRole) => {
+    changeRoleFor = async(userId, newRole) => {
         try {
             await userModel.findByIdAndUpdate(
-                user._id,
-                { role: newRole}
+                userId,
+                { role: newRole }
             );
         } catch (error) {
             console.error(error.message);

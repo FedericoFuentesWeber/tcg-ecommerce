@@ -7,6 +7,7 @@ export class User {
         password, 
         age, 
         cartId,
+        role,
         documents,
         lastConnection
     }) {
@@ -17,6 +18,7 @@ export class User {
         this.password = password;
         this.age = age;
         this.cartId = cartId;
+        this.role = role;
         this.documents = documents;
         this.lastConnection = lastConnection;
     }
@@ -37,10 +39,12 @@ export class User {
             return lastDotIndex === -1 ? name : name.substring(0, lastDotIndex);
         });
 
-        if(documents.length < 3) return false;
+        if(documents.length < 3) {
+            return false;
+        }
 
-        return names.every((name) => {
-            documentsNeeded.includes(name);
+        return documentsNeeded.every((name) => {
+            return names.includes(name);
         });
     };
 }

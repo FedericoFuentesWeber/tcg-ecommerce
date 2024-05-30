@@ -2,8 +2,13 @@ import { Router } from "express";
 import { UserController } from "../controllers/users.controller.js";
 import { storageDestinationFolder } from "../../utils.js";
 
-
+const allowedFiles = [
+    "Identificacion",
+    "Comprobante de domicilio",
+    "Comprobante de estado de cuenta"
+];
 const uploader = storageDestinationFolder("documents");
+
 const router = Router();
 
 const {
@@ -16,6 +21,6 @@ const {
 router.get('/', getAllUsers);
 router.get('/:uid', getUserById);
 router.get('/premium/:uid', changeRole);
-router.post('/:uid/documents', uploader.array("documents"), addDocuments);
+router.post('/:uid/documents', uploader.array('documents'), addDocuments);
 
 export default router;

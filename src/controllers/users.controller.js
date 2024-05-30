@@ -1,5 +1,7 @@
 import { userService } from "../repositories/index.js";
 import { User } from "../main/User/User.js";
+import CustomError from "../utils/errors/CustomError.js";
+import { EErrors } from "../utils/errors/enums.js";
 
 class UserController {
     constructor() {
@@ -33,13 +35,17 @@ class UserController {
             switch(user.role) {
                 case "USER":
                     if(user.allDocumentsRequiredLoaded()) {
-                        this.service.changeRoleFor(user, "PREMIUM");
+                        this.service.changeRoleFor(uid, "PREMIUM");
                     } else {
-                        //Throw error
+                        throw CustomError.createError({
+                            name: "Error changing role",
+                            code: EErrors.DATABASE_ERROR,
+                            cause: "Some documents are missing"
+                        })
                     }
                     break;
                 case "PREMIUM":
-                    this.service.changeRoleFor(user, "USER");
+                    this.service.changeRoleFor(uid, "USER");
                     break;
                 default:
                     break;
@@ -62,12 +68,16 @@ class UserController {
         try {
             const { uid } = req.params;
             
+            if(!req.files) {
+                return res.status(400).send({ status: "failed", payload: "No files uploaded" });
+            }
+
             const documentsToAdd = Array.from(req.files).map(file => {
-                const { originalName, path } = file;
+                const { originalname, path } = file;
 
                 //This is done because the files extensions are not specified
-                const lastDotIndex = originalName.lastIndexOf(".");
-                const name = lastDotIndex === -1 ? originalName : originalName.substring(0, lastDotIndex);
+                const lastDotIndex = originalname.lastIndexOf(".");
+                const name = lastDotIndex === -1 ? originalname : originalname.substring(0, lastDotIndex);
 
                 return {
                     name: name,
