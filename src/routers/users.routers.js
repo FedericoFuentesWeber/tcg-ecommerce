@@ -11,7 +11,8 @@ const {
     getUserById,
     changeRole,
     addDocuments,
-    deleteUser
+    deleteUser,
+    deleteInactiveUsers
 } = new UserController();
 
 router.get('/', getAllUsers);
@@ -19,5 +20,6 @@ router.get('/:uid', getUserById);
 router.get('/premium/:uid', changeRole);
 router.post('/:uid/documents', uploader.array('documents'), addDocuments);
 router.delete('/:uid', deleteUser);
+router.delete('/', deleteInactiveUsers);
 
 export default router;

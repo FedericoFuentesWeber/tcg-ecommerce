@@ -2,6 +2,8 @@ import { userService } from "../repositories/index.js";
 import { User } from "../main/User/User.js";
 import CustomError from "../utils/errors/CustomError.js";
 import { EErrors } from "../utils/errors/enums.js";
+import { createInactiveUserEmail } from "../utils/emailBuilder.js";
+import { sendEmail } from "../utils/email.js";
 
 class UserController {
     constructor() {
@@ -101,16 +103,43 @@ class UserController {
     }
 
     deleteUser = async(req, res) => {
-        const { uid } = req.params;
-        console.log("userId", uid);
         try {
-            
+            const { uid } = req.params;
             await this.service.deleteUser(uid);
 
             return res.status(200).send({
                 status: "success",
                 payload: `El usuario con ID ${uid} fue eliminado correctamente.`
             });
+        } catch (error) {
+            return res.status(400).send({
+                status: "failed",
+                payload: error.message
+            })
+        }
+    }
+
+    deleteInactiveUsers = async(req, res) => {
+        try {
+            const inactiveUsers = await this.service.getInactiveUsers();
+
+            await this.service.deleteUsers(inactiveUsers);
+
+            for(const user of inactiveUsers) {
+                const email = user.email;
+                const emailBody = createInactiveUserEmail();
+
+                sendEmail(
+                    email,
+                    "Su cuenta fue eliminada por inactividad",
+                    emailBody
+                );
+            }
+
+            return res.status(200).send({
+                status: "success",
+                payload: "Los usuarios inactivos fueron eliminados exitosamente."
+            })
         } catch (error) {
             return res.status(400).send({
                 status: "failed",

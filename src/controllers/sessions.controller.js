@@ -3,7 +3,7 @@ import { sessionService } from "../repositories/index.js";
 import { createHash, isValidPassword } from "../utils/bcrypt.js";
 import { sendEmail } from "../utils/email.js";
 import { genertateToken, generateTokenWith } from "../utils/jsonwebtoken.js";
-import { createEmailWith } from "../utils/passwordRecoveryEmail.js";
+import { createRecoveryPasswordEmailWith } from "../utils/emailBuilder.js";
 
 class SessionController {
     constructor() {
@@ -117,7 +117,7 @@ class SessionController {
                 '1h'
             );
 
-            const emailBody = createEmailWith(token);
+            const emailBody = createRecoveryPasswordEmailWith(token);
 
             sendEmail(
                 email,

@@ -152,6 +152,25 @@ export class UserManagerDB {
         }
     }
 
+    getInactiveUsers = async() => {
+        try {
+            const twoDaysAgo = new Date();
+            twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+
+            const inactiveUsers = await userModel.find({
+                lastConnection: { $lt: twoDaysAgo }
+            })
+
+            if(!inactiveUsers) {
+                throw new Error("No se encontro ningún usuario inactivo.");
+            }
+
+            return inactiveUsers;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     changeRoleFor = async(userId, newRole) => {
         try {
             await userModel.findByIdAndUpdate(
@@ -184,6 +203,16 @@ export class UserManagerDB {
 
             if(!result.deletedCount >0) {
                 throw new Error(`No se encontró el usuario con ID ${userId}`);
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    deleteUsers = async(users) => {
+        try {
+            for(const user of users) {
+                await this.deleteUser(user._id);
             }
         } catch (error) {
             throw error;

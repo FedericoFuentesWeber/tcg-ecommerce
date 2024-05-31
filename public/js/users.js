@@ -70,3 +70,39 @@ const deleteUser = (userId) => {
         }
     })
 }
+
+const deleteInactiveUsers = () => {
+    Swal.fire({
+        title: "Desea eliminar los usuarios inactivos?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Eliminar",
+        cancelButtonText: "Cancelar",
+        preConfirm: async() => {
+            try {
+                const response = await fetch(
+                    `/api/users/`,
+                    {
+                        method: "DELETE"
+                    }
+                );
+                if(!response.ok) {
+                    throw new Error("Error al intentar eliminar los usuarios inactivos.");
+
+                }
+                Swal.fire({
+                    title: "Los usuarios fueron eliminados con exito.",
+                    icon: "success",
+                    preConfirm: async() => {
+                        location.reload();
+                    }
+                });
+            } catch (error) {
+                Swal.showValidationMessage(
+                    `<i class="fa fa-info-circle"></i> ${error}`
+                );
+                console.log(error);
+            }
+        }
+    })
+}
