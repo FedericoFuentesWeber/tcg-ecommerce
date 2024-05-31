@@ -99,6 +99,25 @@ class UserController {
             })
         }
     }
+
+    deleteUser = async(req, res) => {
+        const { uid } = req.params;
+        console.log("userId", uid);
+        try {
+            
+            await this.service.deleteUser(uid);
+
+            return res.status(200).send({
+                status: "success",
+                payload: `El usuario con ID ${uid} fue eliminado correctamente.`
+            });
+        } catch (error) {
+            return res.status(400).send({
+                status: "failed",
+                payload: error.message
+            })
+        }
+    }
 }
 
 export { UserController }

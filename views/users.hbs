@@ -1,0 +1,44 @@
+<main>
+    <div class="d-flex justify-content-center p-2">
+        <h1>Administración de usuarios</h1>
+    </div>
+
+    <section>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellido</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Tipo de cuenta</th>
+                </tr>
+            </thead>
+            <tbody id="users_body">
+                {{#each users}}
+                    <tr>
+                        <td>{{this.first_name}}</td>
+                        <td>{{this.last_name}}</td>
+                        <td>{{this.email}}</td>
+                        <td class="px-4">
+                            {{#unless (hasAdminRole this.role)}}
+                                <a onclick="upgradeUser('{{this.id}}')" class="btn-sm clickable">
+                                    Modificar categoria
+                                </a>
+                            {{/unless}}
+                        </td>
+                        <td class="px-4">
+                            <a onclick="deleteUser('{{this.id}}')" class="btn-sm clickable">
+                                Eliminar usuario
+                            </a>
+                        </td>
+                    </tr>
+                {{else}}
+                    <tr>
+                        <td colspan="7">No hay usuarios</td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </section>
+</main>
+<script src="js/users.js"></script>
