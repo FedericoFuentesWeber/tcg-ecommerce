@@ -47,7 +47,7 @@ const createRecoveryPasswordEmailWith = (token) => {
     return emailBody;
 }
 
-const createInactiveUserEmail = (userEmail) => {
+const createInactiveUserEmail = () => {
     const registrationEndpoint = `http://localhost:${PORT}/register`;
     const emailBody = `
     <div className="bg-gray-100 p-6 dark:bg-gray-800">
@@ -85,7 +85,12 @@ const createInactiveUserEmail = (userEmail) => {
   return emailBody;
 }
 
+const createPremiumUserProductDeletionEmail = (deletedProduct) => {
+  const emailBody = `<p>Queríamos informarle que su producto ${deletedProduct.title} ha sido eliminado.</p>`
+}
+
 export { 
   createRecoveryPasswordEmailWith,
-  createInactiveUserEmail
+  createInactiveUserEmail,
+  createPremiumUserProductDeletionEmail
 }

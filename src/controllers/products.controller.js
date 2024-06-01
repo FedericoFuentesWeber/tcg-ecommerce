@@ -1,5 +1,7 @@
 import { io } from "../app.js";
-import { productService } from "../repositories/index.js";
+import { productService, userService } from "../repositories/index.js";
+import { sendEmail } from "../utils/email.js";
+import { createPremiumUserProductDeletionEmail } from "../utils/emailBuilder.js";
 
 class ProductController {
     constructor() {
@@ -127,8 +129,22 @@ class ProductController {
     deleteProduct = async(req, res) => {
         try {
             const { pid } = req.params;
+
+            const productToDelete = await this.service.getProduct(pid);
+            const { email, role } = await userService.getUserById(productToDelete.owner);
+
             await this.service.deleteProduct(pid);
     
+            if( role == "PREMIUM" ){
+                const emailBody = createPremiumUserProductDeletionEmail();
+
+                sendEmail(
+                    email,
+                    "Un producto eliminado",
+                    emailBody
+                )
+            }
+            
             const updatedProducts = await this.service.getAllProducts();
     
             io.emit("updateProductsEvent", updatedProducts);
