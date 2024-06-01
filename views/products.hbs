@@ -30,12 +30,12 @@
                         <td>{{this.price}}</td>
                         <td>{{this.stock}}</td>
                         <td class="px-4">
-                            <a onclick="showImage('{{this.thumbnails}}')" class="btn-sm clickable">
+                            <a onclick="showImage('{{this.thumbnails}}')" class="btn btn-md">
                                 Imagen
                             </a>
                         </td>
                         <td class="px-4">
-                            <a onclick="addProduct('{{this.id}}', '{{../user.cartId}}')" class="btn-sm clickable">
+                            <a onclick="addProduct('{{this.id}}','{{../user.cartId}}')" class="btn btn-md">
                                 Agregar
                             </a>
                         </td>
@@ -53,7 +53,7 @@
         <ul class="pagination justify-content-center">
             {{#if hasPrevPage}}
             <li class="page-item">
-                <a class="page-link" href="products?page={{prevPage}}">Anterior</a>
+                <a class="page-link" href="/products?page={{prevPage}}">Anterior</a>
             </li>
             {{else}}
             <li class="page-item">
@@ -64,7 +64,7 @@
             {{/if}}
             {{#if hasNextPage}}
             <li class="page-item">
-                <a class="page-link" href="products?page={{nextPage}}">Siguiente</a>
+                <a class="page-link" href="/products?page={{nextPage}}">Siguiente</a>
             </li>
             {{else}}
             <li class="page-item">

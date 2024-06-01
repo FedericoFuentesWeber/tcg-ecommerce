@@ -1,5 +1,9 @@
 import { userService } from "../repositories/index.js";
 import { User } from "../main/User/User.js";
+import CustomError from "../utils/errors/CustomError.js";
+import { EErrors } from "../utils/errors/enums.js";
+import { createInactiveUserEmail } from "../utils/emailBuilder.js";
+import { sendEmail } from "../utils/email.js";
 
 class UserController {
     constructor() {
@@ -33,13 +37,17 @@ class UserController {
             switch(user.role) {
                 case "USER":
                     if(user.allDocumentsRequiredLoaded()) {
-                        this.service.changeRoleFor(user, "PREMIUM");
+                        this.service.changeRoleFor(uid, "PREMIUM");
                     } else {
-                        //Throw error
+                        throw CustomError.createError({
+                            name: "Error changing role",
+                            code: EErrors.DATABASE_ERROR,
+                            cause: "Some documents are missing"
+                        })
                     }
                     break;
                 case "PREMIUM":
-                    this.service.changeRoleFor(user, "USER");
+                    this.service.changeRoleFor(uid, "USER");
                     break;
                 default:
                     break;
@@ -62,12 +70,16 @@ class UserController {
         try {
             const { uid } = req.params;
             
+            if(!req.files) {
+                return res.status(400).send({ status: "failed", payload: "No files uploaded" });
+            }
+
             const documentsToAdd = Array.from(req.files).map(file => {
-                const { originalName, path } = file;
+                const { originalname, path } = file;
 
                 //This is done because the files extensions are not specified
-                const lastDotIndex = originalName.lastIndexOf(".");
-                const name = lastDotIndex === -1 ? originalName : originalName.substring(0, lastDotIndex);
+                const lastDotIndex = originalname.lastIndexOf(".");
+                const name = lastDotIndex === -1 ? originalname : originalname.substring(0, lastDotIndex);
 
                 return {
                     name: name,
@@ -82,6 +94,52 @@ class UserController {
                 payload: `Los archivos del usuario ${uid} fueron agregados con exito.`
             });
 
+        } catch (error) {
+            return res.status(400).send({
+                status: "failed",
+                payload: error.message
+            })
+        }
+    }
+
+    deleteUser = async(req, res) => {
+        try {
+            const { uid } = req.params;
+            await this.service.deleteUser(uid);
+
+            return res.status(200).send({
+                status: "success",
+                payload: `El usuario con ID ${uid} fue eliminado correctamente.`
+            });
+        } catch (error) {
+            return res.status(400).send({
+                status: "failed",
+                payload: error.message
+            })
+        }
+    }
+
+    deleteInactiveUsers = async(req, res) => {
+        try {
+            const inactiveUsers = await this.service.getInactiveUsers();
+
+            await this.service.deleteUsers(inactiveUsers);
+
+            for(const user of inactiveUsers) {
+                const email = user.email;
+                const emailBody = createInactiveUserEmail();
+
+                sendEmail(
+                    email,
+                    "Su cuenta fue eliminada por inactividad",
+                    emailBody
+                );
+            }
+
+            return res.status(200).send({
+                status: "success",
+                payload: "Los usuarios inactivos fueron eliminados exitosamente."
+            })
         } catch (error) {
             return res.status(400).send({
                 status: "failed",

@@ -20,7 +20,10 @@ const addProduct = (productId, cartId) => {
                 }
                 Swal.fire({
                     title: "El producto fue agregado correctamente al carrito",
-                    icon: "success"
+                    icon: "success",
+                    preConfirm: async() => {
+                        location.reload()
+                    }
                 });
             } catch(error) {
                 Swal.showValidationMessage(

@@ -7,6 +7,7 @@ import { generateUserErrorInfo } from "../../../utils/errors/info.js";
 import { EErrors } from "../../../utils/errors/enums.js";
 import { config } from "../../../config/config.js";
 import { createHash } from "../../../utils/bcrypt.js";
+import { UserDto } from "../../../dtos/userDto.js";
 
 const cartManager = new CartManagerDB();
 
@@ -71,7 +72,12 @@ export class UserManagerDB {
 
     getUsers = async() => {
         try {
-            return await userModel.find({});
+            const users = await userModel.find({});
+            
+            const parsedUsers = users.map(
+                (newUser) => new User(newUser)
+            );
+            return parsedUsers;
         } catch (error) {
             console.error(error.message);
         }
@@ -146,11 +152,30 @@ export class UserManagerDB {
         }
     }
 
-    changeRoleFor = async(user, newRole) => {
+    getInactiveUsers = async() => {
+        try {
+            const twoDaysAgo = new Date();
+            twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+
+            const inactiveUsers = await userModel.find({
+                lastConnection: { $lt: twoDaysAgo }
+            })
+
+            if(!inactiveUsers) {
+                throw new Error("No se encontro ningún usuario inactivo.");
+            }
+
+            return inactiveUsers;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    changeRoleFor = async(userId, newRole) => {
         try {
             await userModel.findByIdAndUpdate(
-                user._id,
-                { role: newRole}
+                userId,
+                { role: newRole }
             );
         } catch (error) {
             console.error(error.message);
@@ -173,10 +198,21 @@ export class UserManagerDB {
     deleteUser = async(userId) => {
         try {
             const userToDelete = await this.getUserById(userId);
-            const result = await userModel.deleteOne({ _id: userToDelete.id });
+            console.log("user to delete", userToDelete);
+            const result = await userModel.deleteOne({ _id: userToDelete._id });
 
             if(!result.deletedCount >0) {
                 throw new Error(`No se encontró el usuario con ID ${userId}`);
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    deleteUsers = async(users) => {
+        try {
+            for(const user of users) {
+                await this.deleteUser(user._id);
             }
         } catch (error) {
             throw error;

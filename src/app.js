@@ -52,6 +52,9 @@ app.engine('hbs', handlebars.engine({
         } else {
             return JSON.stringify(anObject);
         }
+    },
+    hasAdminRole: (role) => {
+        return role == "ADMIN";       
     }
 }}));
 

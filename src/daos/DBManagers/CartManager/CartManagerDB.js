@@ -126,6 +126,7 @@ export class CartManagerDB {
                 )
             }
             const cart = await cartModel.findById(cartId);
+            console.log("cart", cart);
             if(!cart) {
                 throw new Error(`El carrito con el id ${cartId} no se encuentra en la lista.`)
             }

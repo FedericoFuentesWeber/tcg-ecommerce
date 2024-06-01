@@ -2,7 +2,7 @@ import { config } from "../config/config.js";
 
 const PORT = config.PORT;
 
-const createEmailWith = (token) => {
+const createRecoveryPasswordEmailWith = (token) => {
     const expiredTokenEndpoint = `http://localhost:${PORT}/recoverPassword`;
     const changePasswordEndpoint = `http://localhost:${PORT}/changePassword?token=${token}`;
 
@@ -47,4 +47,50 @@ const createEmailWith = (token) => {
     return emailBody;
 }
 
-export { createEmailWith }
+const createInactiveUserEmail = () => {
+    const registrationEndpoint = `http://localhost:${PORT}/register`;
+    const emailBody = `
+    <div className="bg-gray-100 p-6 dark:bg-gray-800">
+      <div className="mx-auto max-w-md rounded-lg bg-white p-6 shadow-md dark:bg-gray-950">
+        <div className="space-y-4">
+          <div className="border-b border-gray-200 pb-4 dark:border-gray-700">
+            <h1 className="text-2xl font-bold">Cuenta de usuario eliminada</h1>
+          </div>
+          <div className="space-y-2">
+            <p>Lamentamos informarle que su cuenta ha sido eliminada debido a inactividad por más de 2 días.</p>
+            <p>
+              Si desea reactivar su cuenta, por favor
+              <a href=${registrationEndpoint} className="font-medium underline" prefetch={false}>
+                regístrate de nuevo
+              </a>
+              .
+            </p>
+            <p className="text-gray-500 dark:text-gray-400">
+              Agradecemos su comprensión y esperamos tenerlo nuevamente en nuestra plataforma.
+            </p>
+          </div>
+          <div className="flex justify-end">
+            <a
+              href=${registrationEndpoint}
+              className="inline-flex items-center rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-gray-900/90 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus:ring-gray-300"
+              prefetch={false}
+            >
+              Regístrate de nuevo
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>`
+
+  return emailBody;
+}
+
+const createPremiumUserProductDeletionEmail = (deletedProduct) => {
+  const emailBody = `<p>Queríamos informarle que su producto ${deletedProduct.title} ha sido eliminado.</p>`
+}
+
+export { 
+  createRecoveryPasswordEmailWith,
+  createInactiveUserEmail,
+  createPremiumUserProductDeletionEmail
+}
