@@ -1,7 +1,7 @@
 <main>
     <div class="d-flex justify-content-center p-2">
         <h1>Administración de usuarios</h1>
-        <a onclick="deleteInactiveUsers()" class="btn-sm clickable">
+        <a onclick="deleteInactiveUsers()" class="btn btn-md">
             Eliminar usuarios inactivos
         </a>
     </div>
@@ -24,13 +24,13 @@
                         <td>{{this.email}}</td>
                         <td class="px-4">
                             {{#unless (hasAdminRole this.role)}}
-                                <a onclick="upgradeUser('{{this.id}}')" class="btn-sm clickable">
+                                <a onclick="upgradeUser('{{this.id}}')" class="btn btn-md">
                                     Modificar categoria
                                 </a>
                             {{/unless}}
                         </td>
                         <td class="px-4">
-                            <a onclick="deleteUser('{{this.id}}')" class="btn-sm clickable">
+                            <a onclick="deleteUser('{{this.id}}')" class="btn btn-md">
                                 Eliminar usuario
                             </a>
                         </td>
